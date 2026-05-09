@@ -1,0 +1,107 @@
+.dashboard-page {
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(180deg, #f6f9fe 0%, #eef5ff 100%);
+  padding: 24px 16px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-shell {
+  width: min(1100px, 100%);
+  display: grid;
+  gap: 16px;
+}
+
+.dashboard-title h1 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.dashboard-title p {
+  margin-top: 6px;
+  color: #475569;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-card {
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+}
+
+.dashboard-card h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #0e72ed;
+}
+
+.dashboard-card p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.recent-meetings {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.recent-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.recent-head h3 {
+  margin: 0;
+}
+
+.recent-head button {
+  border: none;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.recent-list {
+  display: grid;
+  gap: 8px;
+}
+
+.recent-item {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.recent-item strong {
+  display: block;
+  color: #0f172a;
+}
+
+.recent-item span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.recent-empty {
+  color: #64748b;
+  font-size: 13px;
+}

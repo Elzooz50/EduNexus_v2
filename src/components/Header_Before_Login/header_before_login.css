@@ -1,0 +1,583 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 60px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  height: 66px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: headerSlideDown 0.6s ease-out;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.header:hover {
+  box-shadow: 0 6px 25px rgba(30, 58, 95, 0.08);
+  border-bottom-color: rgba(230, 126, 34, 0.2);
+}
+
+@keyframes headerSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  height: 100%;
+  position: relative;
+  animation: logoFadeIn 0.8s ease-out;
+  will-change: transform;
+}
+
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.header-left img {
+  width: 60px;
+  height: 60px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: filter, box-shadow;
+  border-radius: 10px;
+}
+
+.header-left:hover img {
+  filter: drop-shadow(0 8px 16px rgba(230, 126, 34, 0.3));
+  transform: scale(1.05) rotate(5deg);
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #1E3A5F 0%, #E67E22 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  position: relative;
+  transition: all 0.3s ease;
+  animation: brandGlow 3s infinite;
+  will-change: text-shadow;
+}
+
+@keyframes brandGlow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(30, 58, 95, 0.1), 0 0 10px rgba(230, 126, 34, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(30, 58, 95, 0.2), 0 0 20px rgba(230, 126, 34, 0.2);
+  }
+}
+
+.header-left:hover .brand-name {
+  background: linear-gradient(90deg, #E67E22 0%, #1E3A5F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Desktop Navigation */
+.header-nav-desktop {
+  display: flex;
+  align-items: center;
+  gap: 65px;
+  height: 100%;
+  animation: navFadeIn 0.9s ease-out;
+}
+
+@keyframes navFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  cursor: pointer;
+  padding: 8px 4px;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  letter-spacing: 0.3px;
+  overflow: hidden;
+  will-change: color;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #1E3A5F, #E67E22, #1E3A5F);
+  background-size: 200% 100%;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0.8;
+}
+
+.nav-link:hover::before {
+  transform: translateX(0);
+}
+
+.nav-link:hover {
+  color: #1E3A5F;
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  color: #1E3A5F;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #1E3A5F, #E67E22);
+  animation: activeGlow 2s infinite;
+}
+
+@keyframes activeGlow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 5px rgba(230, 126, 34, 0.3);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 12px rgba(230, 126, 34, 0.6);
+  }
+}
+
+.nav-btn-signup {
+  background: linear-gradient(90deg, #1E3A5F, #E67E22, #1E3A5F);
+  background-size: 200% 100%;
+  color: #ffffff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  height: 40px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(30, 58, 95, 0.2);
+  animation: signupPulse 3s infinite;
+  will-change: box-shadow, background-position;
+}
+
+.nav-btn-signup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.nav-btn-signup:hover {
+  background-position: right center;
+  box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+  transform: translateY(-2px);
+}
+
+.nav-btn-signup:hover::before {
+  left: 100%;
+}
+
+.nav-btn-signup:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+}
+
+@keyframes signupPulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+  }
+}
+
+.nav-btn-signup.active {
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.2), 0 0 0 5px rgba(230, 126, 34, 0.1);
+  animation: activeButton 2s infinite;
+}
+
+@keyframes activeButton {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.2), 0 0 0 5px rgba(230, 126, 34, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.25), 0 0 0 7px rgba(230, 126, 34, 0.15);
+  }
+}
+
+/* Hamburger menu button */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  height: 100%;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  animation: menuFadeIn 0.8s ease-out;
+}
+
+.menu-toggle:hover {
+  background: rgba(230, 126, 34, 0.1);
+  transform: rotate(180deg);
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 24px;
+  transition: all 0.3s ease;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #1E3A5F;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 2px;
+}
+
+.menu-toggle:hover .hamburger span {
+  background: #E67E22;
+}
+
+.hamburger.open span:first-child {
+  transform: rotate(45deg) translate(6px, 6px);
+  background: #E67E22;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.hamburger.open span:last-child {
+  transform: rotate(-45deg) translate(6px, -6px);
+  background: #E67E22;
+}
+
+/* Mobile Navigation */
+.header-nav-mobile {
+  display: none;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.header-nav-mobile.open {
+  max-height: 500px;
+  padding: 20px;
+  animation: mobileMenuSlide 0.5s ease-out;
+}
+
+@keyframes mobileMenuSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-nav-mobile .nav-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header-nav-mobile .nav-link {
+  width: 100%;
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 15px;
+  border-radius: 12px;
+  height: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-nav-mobile .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(30, 58, 95, 0.1), rgba(230, 126, 34, 0.1));
+  transition: width 0.3s ease;
+  z-index: -1;
+}
+
+.header-nav-mobile .nav-link:hover {
+  transform: translateX(8px);
+  color: #1E3A5F;
+}
+
+.header-nav-mobile .nav-link:hover::before {
+  width: 100%;
+}
+
+.header-nav-mobile .nav-link.active {
+  background: linear-gradient(90deg, rgba(30, 58, 95, 0.05), rgba(230, 126, 34, 0.05));
+  color: #1E3A5F;
+  border-left: 4px solid #E67E22;
+  font-weight: 600;
+}
+
+.header-nav-mobile .nav-link.active::after {
+  display: none;
+}
+
+.header-nav-mobile .nav-btn-signup {
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+  justify-content: center;
+  height: 48px;
+  font-size: 15px;
+  border-radius: 30px;
+  transform: none !important;
+  animation: mobileSignupPulse 3s infinite;
+}
+
+@keyframes mobileSignupPulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(230, 126, 34, 0.3);
+  }
+}
+
+/* Add shimmer effect to header border */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #E67E22, #1E3A5F, #E67E22, transparent);
+  background-size: 200% 100%;
+  animation: borderShimmer 6s infinite;
+  opacity: 0.3;
+}
+
+@keyframes borderShimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Add floating particles effect on hover */
+.header:hover .header-nav-desktop .nav-link {
+  animation: navShake 0.5s ease;
+}
+
+@keyframes navShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Responsive - with all animations preserved */
+@media (max-width: 992px) {
+  .header {
+    padding: 8px 24px;
+  }
+
+  .header-nav-desktop {
+    gap: 30px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+  }
+  
+  .nav-link {
+    font-size: 13px;
+  }
+  
+  .nav-btn-signup {
+    padding: 8px 18px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 8px 20px;
+    height: 64px;
+  }
+
+  .header-nav-desktop {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .header-nav-mobile {
+    display: block;
+    top: 64px;
+  }
+
+  .header-left img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand-name {
+    font-size: 20px;
+  }
+
+  .nav-btn-signup {
+    padding: 8px 16px;
+  }
+  
+  .header-left:hover img {
+    transform: scale(1.08) rotate(3deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 16px;
+    height: 60px;
+  }
+
+  .header-nav-mobile {
+    top: 60px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .header-left img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-left {
+    gap: 8px;
+  }
+  
+  .header-nav-mobile .nav-link {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .header-nav-mobile .nav-btn-signup {
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* Add ripple effect for nav links (optional - uncomment if you want click effect) */
+
+.nav-link:active::after,
+.nav-btn-signup:active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  animation: ripple 0.4s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}

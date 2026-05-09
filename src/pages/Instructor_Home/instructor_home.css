@@ -1,0 +1,218 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.instructor-home {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 24px;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+/* ─────── Header ─────── */
+.ih-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ih-welcome h1 {
+  font-size: 28px;
+  color: #1e3a5f;
+  font-weight: 700;
+}
+
+.ih-subtitle {
+  color: #666;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.ih-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ih-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ih-badge.active { background: #e6f7ee; color: #027a48; }
+.ih-badge.inactive { background: #fdecea; color: #b42318; }
+.ih-badge.confirmed { background: #e6f7ee; color: #027a48; }
+.ih-badge.unconfirmed { background: #fff7e6; color: #b87333; }
+
+/* ─────── Profile Card ─────── */
+.ih-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+
+.ih-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a5f, #d2691e);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ih-profile-info h2 {
+  font-size: 20px;
+  color: #1e3a5f;
+}
+
+.ih-role {
+  color: #d2691e;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ih-email, .ih-phone {
+  color: #666;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.ih-refresh-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.ih-refresh-btn:hover {
+  transform: rotate(180deg);
+}
+
+/* ─────── Stats Grid ─────── */
+.ih-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.ih-stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: transform 0.2s;
+}
+
+.ih-stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.ih-stat-icon {
+  font-size: 32px;
+}
+
+.ih-stat-value {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.ih-stat-label {
+  font-size: 13px;
+  color: #888;
+}
+
+/* ─────── Sections ─────── */
+.ih-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.ih-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ih-section-header h3 {
+  font-size: 18px;
+  color: #1e3a5f;
+}
+
+.ih-count {
+  font-size: 13px;
+  color: #999;
+}
+
+/* ─────── Empty State ─────── */
+.ih-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.ih-empty-state p {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.ih-empty-hint {
+  font-size: 13px !important;
+  color: #bbb;
+}
+
+.ih-action-btn {
+  background: linear-gradient(90deg, #1e3a5f, #d2691e);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ih-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(210, 105, 30, 0.3);
+}
+
+/* ─────── Responsive ─────── */
+@media (max-width: 768px) {
+  .instructor-home { padding: 20px 16px; }
+  .ih-welcome h1 { font-size: 22px; }
+  .ih-profile-card { flex-direction: column; text-align: center; }
+  .ih-refresh-btn { margin-left: 0; }
+}

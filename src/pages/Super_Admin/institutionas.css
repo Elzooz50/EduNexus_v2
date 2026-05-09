@@ -1,0 +1,109 @@
+/* Institutionas Page Styles */
+
+.inst-header-section {
+  margin-bottom: 32px;
+}
+
+.inst-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.inst-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.inst-table-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.inst-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.inst-table th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.inst-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.inst-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.inst-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inst-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.inst-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.inst-name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.inst-domain {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.inst-empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px 16px !important;
+  font-size: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .inst-title {
+    font-size: 22px;
+  }
+
+  .inst-table-card {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inst-title {
+    font-size: 18px;
+  }
+}

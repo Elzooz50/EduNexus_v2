@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+}
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* background-image: url("/public/Splash\ \(2\).jpg"); */
+}
