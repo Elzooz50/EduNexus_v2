@@ -1,7 +1,7 @@
 // src/services/authService.js
 
 import apiClient from './apiClient';
-import { saveAuthData, clearAuthData } from './authStorage';
+import { saveAuthData, clearAuthData, getRoleFromToken, mapRoleNameToId } from './authStorage';
 
 /**
  * Login with SSN or Email
@@ -25,7 +25,6 @@ export const loginWithSsnOrEmail = async ({ ssnOrEmail, password, rememberMe }) 
  * @returns {Promise<Object>} User profile data
  */
 export const fetchProfile = async () => {
-  // DO NOT manually set Authorization header — let the interceptor do it
   const response = await apiClient.get('/Account/profile');
   return response.data;
 };
@@ -47,7 +46,6 @@ export const loginAndFetchProfile = async (credentials) => {
   }
 
   // 2. Set the token directly on the apiClient default headers
-  //    This ensures ALL subsequent requests use this token
   apiClient.defaults.headers.common['Authorization'] = `Bearer ${loginResponse.token}`;
 
   // 3. Save token to storage (for page reloads)
@@ -56,7 +54,19 @@ export const loginAndFetchProfile = async (credentials) => {
   // 4. Fetch full profile
   const profile = await fetchProfile();
 
-  // 5. Update stored user with FULL profile
+  // 5. WORKAROUND: If roleId is null but role is missing, extract from JWT token
+  if (!profile.roleId) {
+    const roleNameFromToken = getRoleFromToken(loginResponse.token);
+    if (roleNameFromToken) {
+      const extractedRoleId = mapRoleNameToId(roleNameFromToken);
+      if (extractedRoleId) {
+        profile.roleId = extractedRoleId;
+        profile.role = { name: roleNameFromToken };
+      }
+    }
+  }
+
+  // 6. Update stored user with FULL profile
   saveAuthData(loginResponse.token, profile, credentials.rememberMe);
 
   return {
@@ -65,11 +75,59 @@ export const loginAndFetchProfile = async (credentials) => {
   };
 };
 
+// ──────────────────────────────────────
+// NEW: Update account profile
+// ──────────────────────────────────────
 /**
- * Logout
+ * Update account profile
+ * @param {Object} data - Profile data
+ * @param {string} data.ssn
+ * @param {string} data.firstName
+ * @param {string} data.secondName
+ * @param {string} data.thirdName
+ * @param {string} data.lastName
+ * @param {string} data.phoneNumber
+ * @param {string} data.email
+ * @returns {Promise<{message: string}>}
+ */
+export const updateAccount = async (data) => {
+  const response = await apiClient.put('/Account/update-account', data);
+  return response.data;
+};
+
+// ──────────────────────────────────────
+// NEW: Change password
+// ──────────────────────────────────────
+/**
+ * Change user password
+ * @param {string} userId - User ID
+ * @param {Object} passwords - Password data
+ * @param {string} passwords.currentPassword
+ * @param {string} passwords.newPassword
+ * @param {string} passwords.confirmPassword
+ * @returns {Promise<{success: boolean, message: string, errors?: string[]}>}
+ */
+export const changePassword = async (userId, passwords) => {
+  const response = await apiClient.post(`/Auth/change-password/${userId}`, passwords);
+  return response.data;
+};
+
+// ──────────────────────────────────────
+// NEW: Logout from server
+// ──────────────────────────────────────
+/**
+ * Logout from server
+ * @returns {Promise<{success: boolean, message: string, errors?: string[]}>}
+ */
+export const logoutFromServer = async () => {
+  const response = await apiClient.post('/Auth/logout');
+  return response.data;
+};
+
+/**
+ * Logout (local only)
  */
 export const logout = () => {
-  // Remove the default header
   delete apiClient.defaults.headers.common['Authorization'];
   clearAuthData();
 };

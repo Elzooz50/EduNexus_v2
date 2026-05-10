@@ -10,23 +10,46 @@ import {
   ROLE_ROUTES,
   ROLE_NAMES,
   isAuthenticated as checkAuth,
+  getRoleFromToken,
+  mapRoleNameToId,
 } from '../services/authStorage';
 
 /**
+ * @typedef {Object} User
+ * @property {string} [fullName]
+ * @property {string} [firstName]
+ * @property {string} [lastName]
+ * @property {string} [email]
+ * @property {{name?:string}} [role]
+ * @property {number} [roleId]
+ * @property {boolean} [isActive]
+ * @property {boolean} [emailConfirmed]
+ * @property {string} [phoneNumber]
+ * @property {number} [gender]
+ * @property {Array<any>} [studentCourses]
+ * @property {Array<any>} [groups]
+ * @property {Array<any>} [attendances]
+ * @property {Array<any>} [answerAttempts]
+ * @property {Array<any>} [courseInstructors]
+ * @property {Array<any>} [instituteInstructors]
+ * @property {Array<any>} [meetings]
+ */
+
+/**
  * @typedef {Object} AuthContextType
- * @property {Object|null} user
+ * @property {User|null} user
  * @property {boolean} isAuthenticated
  * @property {boolean} isLoading
  * @property {boolean} profileLoading
- * @property {Function} login
- * @property {Function} logout
- * @property {Function} refreshProfile
+ * @property {(credentials: any) => Promise<any>} login
+ * @property {() => void} logout
+ * @property {() => Promise<User|null>} refreshProfile
  * @property {number|null} roleId
  * @property {string|null} roleName
  */
 
 /** @type {React.Context<AuthContextType>} */
-const AuthContext = createContext(/** @type {any} */(null));
+const AuthContext = createContext(/** @type {any} */ (null));
 
 /**
  * Hook to use the Auth context
@@ -48,11 +71,31 @@ export const useAuth = () => {
  * @returns {React.ReactElement}
  */
 export const AuthProvider = ({ children }) => {
-  /** @type {[any, Function]} */
-  const [user, setUser] = useState(null);
+  /** @type {[User|null, Function]} */
+  const [user, setUser] = useState(/** @type {User|null} */ (null));
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
+
+  /**
+   * Enrich user object with roleId if missing
+   * @param {User} userObj
+   * @returns {User}
+   */
+  const enrichUserWithRole = useCallback((userObj) => {
+    if (userObj && !userObj.roleId) {
+      const token = getAuthToken();
+      const roleNameFromToken = getRoleFromToken(token);
+      if (roleNameFromToken) {
+        const extractedRoleId = mapRoleNameToId(roleNameFromToken);
+        if (extractedRoleId) {
+          userObj.roleId = extractedRoleId;
+          userObj.role = { name: roleNameFromToken };
+        }
+      }
+    }
+    return userObj;
+  }, []);
 
   // Initialize: Check stored auth & refresh profile
   useEffect(() => {
@@ -60,17 +103,19 @@ export const AuthProvider = ({ children }) => {
       if (checkAuth()) {
         const storedUser = getAuthUser();
         if (storedUser) {
-          setUser(storedUser);
+          const enrichedUser = enrichUserWithRole(storedUser);
+          setUser(enrichedUser);
           setIsAuth(true);
           
           // Refresh profile in background
           try {
             const freshProfile = await fetchProfile();
+            const enrichedProfile = enrichUserWithRole(freshProfile);
             const token = getAuthToken();
             if (token) {
-              saveAuthData(token, freshProfile, true); // keep rememberMe consistent
+              saveAuthData(token, enrichedProfile, true); // keep rememberMe consistent
             }
-            setUser(freshProfile);
+            setUser(enrichedProfile);
           } catch {
             // If profile fetch fails, keep stored user
           }
@@ -79,7 +124,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     };
     initAuth();
-  }, []);
+  }, [enrichUserWithRole]);
 
   /**
    * Login handler
@@ -107,16 +152,17 @@ export const AuthProvider = ({ children }) => {
     setProfileLoading(true);
     try {
       const profile = await fetchProfile();
+      const enrichedProfile = enrichUserWithRole(profile);
       const token = getAuthToken();
       if (token) {
-        saveAuthData(token, profile, true);
+        saveAuthData(token, enrichedProfile, true);
       }
-      setUser(profile);
-      return profile;
+      setUser(enrichedProfile);
+      return enrichedProfile;
     } finally {
       setProfileLoading(false);
     }
-  }, []);
+  }, [enrichUserWithRole]);
 
   // Logout
   const logout = useCallback(() => {

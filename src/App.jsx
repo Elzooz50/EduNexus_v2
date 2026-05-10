@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { ROLES } from './services/authStorage.js';
-
+import Settings from './pages/Settings/Settings.jsx';
 // Public Pages
 import Home from './pages/Home/Home.jsx';
 import Get_Started from './pages/Get_Started/Get_Started.jsx';
@@ -55,6 +55,14 @@ const router = createBrowserRouter([
   { path: '/forget-password', element: <Forget_Password /> },
   { path: '/verification-code', element: <Verification_Code /> },
   { path: '/new-password', element: <New_Password /> },
+  {
+  path: '/settings',
+  element: (
+    <ProtectedRoute allowedRoles={[1, 2, 3, 4]}>
+      <Settings />
+    </ProtectedRoute>
+  ),
+  },
 
   // ─────────── SUPER ADMIN (roleId: 1) ───────────
   {

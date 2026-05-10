@@ -95,3 +95,38 @@ export const ROLE_NAMES = {
   [ROLES.INSTRUCTOR]: 'Instructor',
   [ROLES.STUDENT]: 'Student',
 };
+
+/**
+ * Decode JWT token and extract role claim
+ * @param {string} token - JWT token
+ * @returns {string|null} Role name or null
+ */
+export const getRoleFromToken = (token) => {
+  if (!token) return null;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    // Extract role from Microsoft identity claims
+    return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Map role name to roleId
+ * @param {string} roleName - Role name (e.g., 'Student', 'Instructor')
+ * @returns {number|null} Role ID or null
+ */
+export const mapRoleNameToId = (roleName) => {
+  const roleMap = {
+    'Super Admin': ROLES.SUPER_ADMIN,
+    'Institutional Admin': ROLES.INST_ADMIN,
+    'SuperAdmin': ROLES.SUPER_ADMIN,
+    'InstAdmin': ROLES.INST_ADMIN,
+    'Instructor': ROLES.INSTRUCTOR,
+    'Student': ROLES.STUDENT,
+  };
+  return roleMap[roleName] || null;
+};
