@@ -1,5 +1,3 @@
-// src/pages/Settings/Settings.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
@@ -15,11 +13,10 @@ const Settings = () => {
   const refreshProfile = authContext?.refreshProfile;
   const logout = authContext?.logout;
 
-  const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'password'
+  const [activeTab, setActiveTab] = useState('profile');
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  // ─────── Profile Form State ───────
   const [profileForm, setProfileForm] = useState({
     firstName: user?.firstName || '',
     secondName: user?.secondName || '',
@@ -30,7 +27,6 @@ const Settings = () => {
     ssn: user?.ssn || '',
   });
 
-  // ─────── Password Form State ───────
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
@@ -39,7 +35,6 @@ const Settings = () => {
 
   const [passwordErrors, setPasswordErrors] = useState({});
 
-  // ─────── Handlers ───────
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
     setProfileForm(prev => ({ ...prev, [name]: value }));
@@ -51,7 +46,6 @@ const Settings = () => {
     if (passwordErrors[name]) setPasswordErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  // ─────── Submit Profile ───────
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -64,9 +58,8 @@ const Settings = () => {
       try {
         await logoutFromServer();
       } catch {
-        // ignore logout errors and clear local auth anyway
+        // ignore
       }
-
       logout?.();
       setIsSaving(false);
       navigate('/login', { replace: true });
@@ -77,13 +70,11 @@ const Settings = () => {
     }
   };
 
-  // ─────── Submit Password ───────
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setPasswordErrors({});
     setMessage({ type: '', text: '' });
 
-    // Validate
     const errors = {};
     if (!passwordForm.currentPassword) errors.currentPassword = 'Current password is required';
     if (passwordForm.newPassword.length < 8) errors.newPassword = 'At least 8 characters';
@@ -115,7 +106,6 @@ const Settings = () => {
     }
   };
 
-  // ─────── Logout ───────
   const handleLogout = async () => {
     try {
       await logoutFromServer();
@@ -128,18 +118,22 @@ const Settings = () => {
 
   return (
     <div className="settings-page">
+      {/* Background decorations */}
+      <div className="st-bg-shape shape-a"></div>
+      <div className="st-bg-shape shape-b"></div>
+
       {/* Back Button */}
       <button className="st-back-btn" onClick={() => navigate(-1)}>
-        <svg viewBox="0 0 24 24" width="20" height="20">
-          <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
         </svg>
         Back
       </button>
 
       {/* Header */}
       <div className="st-header">
-        <h1>⚙️ Settings</h1>
-        <p>Manage your account settings</p>
+        <h1>Settings</h1>
+        <p>Manage your account details and security</p>
       </div>
 
       {/* Tabs */}
@@ -148,13 +142,21 @@ const Settings = () => {
           className={`st-tab ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => { setActiveTab('profile'); setMessage({ type: '', text: '' }); }}
         >
-          👤 Edit Profile
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Edit Profile
         </button>
         <button
           className={`st-tab ${activeTab === 'password' ? 'active' : ''}`}
           onClick={() => { setActiveTab('password'); setMessage({ type: '', text: '' }); }}
         >
-          🔒 Change Password
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          Change Password
         </button>
       </div>
 
@@ -163,7 +165,6 @@ const Settings = () => {
         <div className={`st-message ${message.type}`}>{message.text}</div>
       )}
 
-      {/* ─────── Profile Form ─────── */}
       {activeTab === 'profile' && (
         <form className="st-form" onSubmit={handleProfileSubmit}>
           <div className="st-form-row">
@@ -210,7 +211,6 @@ const Settings = () => {
         </form>
       )}
 
-      {/* ─────── Password Form ─────── */}
       {activeTab === 'password' && (
         <form className="st-form" onSubmit={handlePasswordSubmit}>
           <div className="st-form-group">
@@ -270,16 +270,21 @@ const Settings = () => {
         </form>
       )}
 
-      {/* ─────── Danger Zone ─────── */}
       <div className="st-danger-zone">
-        <h3>🚪 Logout</h3>
-        <p>Sign out of your account</p>
-        <button className="st-logout-btn" onClick={handleLogout}>
-          <svg viewBox="0 0 24 24" width="18" height="18">
-            <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-          </svg>
-          Logout
-        </button>
+        <div className="st-danger-content">
+          <div>
+            <h3>Logout</h3>
+            <p>Sign out of your account</p>
+          </div>
+          <button className="st-logout-btn" onClick={handleLogout}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

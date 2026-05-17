@@ -7,13 +7,13 @@ const USER_KEY = 'user';
  * Save auth data to storage
  * @param {string} token - JWT token
  * @param {object} user - User object
- * @param {boolean} rememberMe - If true, use localStorage (persists). If false, use sessionStorage.
+ * @param {boolean} rememberMe - Unused; auth data is always stored in localStorage for cross-tab sync.
  */
-export const saveAuthData = (token, user, rememberMe = false) => {
-  const storage = rememberMe ? localStorage : sessionStorage;
-  
-  if (token) storage.setItem(TOKEN_KEY, token);
-  if (user) storage.setItem(USER_KEY, JSON.stringify(user));
+export const saveAuthData = (token, user) => {
+  // Always use localStorage for auth data to enable cross-tab synchronization
+  // This ensures that login state persists across tabs and page reloads
+  if (token) localStorage.setItem(TOKEN_KEY, token);
+  if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
 };
 
 /**
@@ -120,13 +120,34 @@ export const getRoleFromToken = (token) => {
  * @returns {number|null} Role ID or null
  */
 export const mapRoleNameToId = (roleName) => {
+  if (!roleName) return null;
+
+  // Normalize role name to handle variations from backend tokens
+  const normalized = roleName
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[_\\-]/g, ' ')
+    .replace(/\s+/g, ' ');
+
+  // Heuristic checks to map various role name variants to our role IDs
+  if (normalized.includes('super') && normalized.includes('admin')) return ROLES.SUPER_ADMIN;
+  if (normalized.includes('inst') || normalized.includes('institution') || normalized.includes('institute')) return ROLES.INST_ADMIN;
+  if (normalized.includes('instructor')) return ROLES.INSTRUCTOR;
+  if (normalized.includes('student')) return ROLES.STUDENT;
+  if (normalized === 'admin') return ROLES.INST_ADMIN;
+
+  // Fallback explicit map for common exact names
   const roleMap = {
-    'Super Admin': ROLES.SUPER_ADMIN,
-    'Institutional Admin': ROLES.INST_ADMIN,
-    'SuperAdmin': ROLES.SUPER_ADMIN,
-    'InstAdmin': ROLES.INST_ADMIN,
-    'Instructor': ROLES.INSTRUCTOR,
-    'Student': ROLES.STUDENT,
+    'super admin': ROLES.SUPER_ADMIN,
+    'institutional admin': ROLES.INST_ADMIN,
+    'superadmin': ROLES.SUPER_ADMIN,
+    'instadmin': ROLES.INST_ADMIN,
+    'instructor': ROLES.INSTRUCTOR,
+    'student': ROLES.STUDENT,
+    'institute': ROLES.INST_ADMIN,
+    'institute admin': ROLES.INST_ADMIN,
   };
-  return roleMap[roleName] || null;
+
+  return roleMap[normalized] || null;
 };

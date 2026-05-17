@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { getAuthToken, clearAuthData } from './authStorage';
 
-const BASE_URL = '/api'; // Uses Vite proxy
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://edunexus.runasp.net/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

@@ -1,19 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './logout.css';
 
 const Logout = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    // Local cleanup is done in logout service even if API fails.
+    // Call logout from auth context to update state properly
+    logout();
     await new Promise((resolve) => setTimeout(resolve, 500));
-    sessionStorage.clear();
     navigate('/login');
   };
 
   const handleCancel = () => {
-    navigate('/Admin_Dashboard');
+    navigate(-1);
   };
 
   return (

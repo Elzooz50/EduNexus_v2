@@ -124,6 +124,28 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     };
     initAuth();
+
+    // Listen for auth changes from other tabs (cross-tab synchronization)
+    const handleStorageChange = (event) => {
+      if (event.key === 'user' || event.key === 'accessToken') {
+        if (event.newValue) {
+          // Auth data was updated in another tab
+          const storedUser = getAuthUser();
+          if (storedUser) {
+            const enrichedUser = enrichUserWithRole(storedUser);
+            setUser(enrichedUser);
+            setIsAuth(true);
+          }
+        } else if (!event.newValue) {
+          // Auth data was cleared (logout) in another tab
+          setUser(null);
+          setIsAuth(false);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [enrichUserWithRole]);
 
   /**
@@ -142,7 +164,8 @@ export const AuthProvider = ({ children }) => {
 
     return {
       user: result.user,
-      redirectPath: ROLE_ROUTES[Number(result.user.roleId)] || '/login',
+      // If roleId is missing, fall back to root so user isn't stuck on /login
+      redirectPath: ROLE_ROUTES[Number(result.user.roleId)] || '/',
       roleName: ROLE_NAMES[Number(result.user.roleId)] || 'User',
     };
   }, []);

@@ -3,6 +3,24 @@
 import apiClient from './apiClient';
 import { saveAuthData, clearAuthData, getRoleFromToken, mapRoleNameToId } from './authStorage';
 
+const enrichProfileFromToken = (profile, token) => {
+  if (!profile?.roleId) {
+    const roleNameFromToken = getRoleFromToken(token);
+    if (roleNameFromToken) {
+      const extractedRoleId = mapRoleNameToId(roleNameFromToken);
+      if (extractedRoleId) {
+        return {
+          ...profile,
+          roleId: extractedRoleId,
+          role: { name: roleNameFromToken },
+        };
+      }
+    }
+  }
+
+  return profile;
+};
+
 /**
  * Login with SSN or Email
  * @param {Object} credentials - Login credentials
@@ -49,25 +67,8 @@ export const loginAndFetchProfile = async (credentials) => {
   apiClient.defaults.headers.common['Authorization'] = `Bearer ${loginResponse.token}`;
 
   // 3. Save token to storage (for page reloads)
-  saveAuthData(loginResponse.token, loginResponse.user, credentials.rememberMe);
-
-  // 4. Fetch full profile
-  const profile = await fetchProfile();
-
-  // 5. WORKAROUND: If roleId is null but role is missing, extract from JWT token
-  if (!profile.roleId) {
-    const roleNameFromToken = getRoleFromToken(loginResponse.token);
-    if (roleNameFromToken) {
-      const extractedRoleId = mapRoleNameToId(roleNameFromToken);
-      if (extractedRoleId) {
-        profile.roleId = extractedRoleId;
-        profile.role = { name: roleNameFromToken };
-      }
-    }
-  }
-
-  // 6. Update stored user with FULL profile
-  saveAuthData(loginResponse.token, profile, credentials.rememberMe);
+  const profile = enrichProfileFromToken(loginResponse.user || {}, loginResponse.token);
+  saveAuthData(loginResponse.token, profile);
 
   return {
     token: loginResponse.token,

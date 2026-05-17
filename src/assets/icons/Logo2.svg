@@ -1,0 +1,168 @@
+<svg width="700" height="220" viewBox="0 0 700 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+
+    <!-- MAIN GRADIENT -->
+    <linearGradient id="mainGradient" x1="60" y1="40" x2="220" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34D8FF"/>
+      <stop offset="45%" stop-color="#0057FF"/>
+      <stop offset="100%" stop-color="#FF7A00"/>
+    </linearGradient>
+
+    <!-- TEXT GRADIENT -->
+    <linearGradient id="textGradient" x1="250" y1="50" x2="620" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#8FCBFF"/>
+      <stop offset="100%" stop-color="#FF9B3D"/>
+    </linearGradient>
+
+    <!-- GLOW -->
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- SHADOW -->
+    <filter id="shadow" x="-100%" y="-100%" width="300%" height="300%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#005CFF" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- BACKGROUND GLOW -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0057FF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0B1020" stop-opacity="0"/>
+    </radialGradient>
+
+  </defs>
+
+  <!-- DARK BG -->
+  <rect width="700" height="220" rx="30" fill="#0B1020"/>
+
+  <!-- BACKGROUND GLOW -->
+  <circle cx="170" cy="110" r="120" fill="url(#bgGlow)">
+    <animate attributeName="r"
+      values="110;125;110"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+
+  <!-- FLOATING PARTICLES -->
+  <circle cx="90" cy="50" r="3" fill="#34D8FF" opacity="0.8">
+    <animate attributeName="cy" values="50;35;50" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <circle cx="190" cy="170" r="4" fill="#FF8A00" opacity="0.8">
+    <animate attributeName="cy" values="170;155;170" dur="4s" repeatCount="indefinite"/>
+  </circle>
+
+  <circle cx="250" cy="60" r="2" fill="#ffffff" opacity="0.7">
+    <animate attributeName="opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- LOGO GROUP -->
+  <g transform="translate(40 25)" filter="url(#shadow)">
+
+    <!-- OUTER GLOW -->
+    <circle cx="90" cy="85" r="72" fill="#0057FF" opacity="0.12">
+      <animate attributeName="opacity" values="0.08;0.18;0.08" dur="4s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- CAP TOP -->
+    <path
+      d="M10 70L90 30L170 70L90 110L10 70Z"
+      stroke="url(#mainGradient)"
+      stroke-width="12"
+      stroke-linejoin="round"
+      fill="rgba(255,255,255,0.02)"
+    >
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0 0; 0 -2; 0 0"
+        dur="4s"
+        repeatCount="indefinite"/>
+    </path>
+
+    <!-- BOTTOM -->
+    <path
+      d="M40 95V132C40 152 63 168 90 168C117 168 140 152 140 132V95"
+      stroke="url(#mainGradient)"
+      stroke-width="12"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0 0; 0 2; 0 0"
+        dur="4s"
+        repeatCount="indefinite"/>
+    </path>
+
+    <!-- TASSEL -->
+    <path
+      d="M148 78V122"
+      stroke="#FF8A00"
+      stroke-width="10"
+      stroke-linecap="round"
+      filter="url(#glow)"
+    >
+      <animate attributeName="stroke" values="#FF8A00;#FFC266;#FF8A00" dur="2s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- TASSEL DOT -->
+    <circle cx="148" cy="73" r="6" fill="#FF9B3D">
+      <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- AI NODES -->
+    <circle cx="62" cy="62" r="3" fill="#34D8FF"/>
+    <circle cx="118" cy="62" r="3" fill="#34D8FF"/>
+    <circle cx="90" cy="88" r="3" fill="#34D8FF"/>
+
+    <path d="M62 62L90 88L118 62"
+      stroke="#34D8FF"
+      stroke-width="2"
+      opacity="0.8">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </path>
+
+  </g>
+
+  <!-- BRAND NAME -->
+  <g>
+
+    <text x="250" y="105"
+      font-size="54"
+      font-family="Poppins, Arial, sans-serif"
+      font-weight="700"
+      fill="url(#textGradient)"
+      letter-spacing="1.5"
+      filter="url(#glow)">
+      EduNexus
+    </text>
+
+    <!-- SUBTITLE -->
+    <text x="252" y="138"
+      font-size="18"
+      font-family="Inter, Arial, sans-serif"
+      fill="#9FB3D9"
+      letter-spacing="5">
+      AI POWERED LEARNING
+    </text>
+
+    <!-- UNDERLINE -->
+    <rect x="252" y="152" width="220" height="4" rx="10"
+      fill="url(#mainGradient)">
+      <animate attributeName="width"
+        values="0;220;180;220"
+        dur="4s"
+        repeatCount="indefinite"/>
+    </rect>
+
+  </g>
+
+</svg>

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Navbar from './Navbar/Navbar.jsx';
 import { ROLE_ROUTES } from '../services/authStorage';
 import { useAuth } from '../context/useAuth.js';
 
@@ -36,13 +35,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     }
   }
 
-  // Authenticated + authorized → render with Navbar
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
-  );
+  // Authenticated + authorized → render children
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
