@@ -3,19 +3,60 @@ import { useNavigate } from 'react-router-dom';
 import './forget_password.css';
 import logo from '../../assets/icons/Logo.svg';
 import forgetPasswordIllustration from '../../assets/images/forget-password-illustration.png';
+import axios from 'axios';
 
 const Forget_Password = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleBack = () => {
     navigate('/login');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle confirm mail logic here
-    console.log('Email submitted:', email);
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        'https://edunexus.runasp.net/api/Auth/forgot-password',
+        email,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // Check if the response indicates success
+      if (response.data.message.includes('sent successfully')) {
+        setSuccess(response.data.message);
+        // Navigate to verification code page after a brief delay
+        setTimeout(() => {
+          navigate('/verification-code', { state: { email } });
+        }, 1500);
+      } else {
+        // Non-existent email or other response
+        setSuccess('If this email exists in our system, you will receive a password reset link.');
+        setTimeout(() => {
+          navigate('/verification-code', { state: { email } });
+        }, 1500);
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 
+        err.message || 
+        'An error occurred. Please try again.'
+      );
+      console.error('Forgot password error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,6 +101,7 @@ const Forget_Password = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={loading}
               />
               <svg className="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
                 <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -68,8 +110,20 @@ const Forget_Password = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn-confirm">
-            Confirm Mail
+          {error && (
+            <div className="alert alert-error" style={{ color: '#d32f2f', marginTop: '12px', padding: '10px', backgroundColor: '#ffebee', borderRadius: '4px' }}>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="alert alert-success" style={{ color: '#388e3c', marginTop: '12px', padding: '10px', backgroundColor: '#e8f5e9', borderRadius: '4px' }}>
+              {success}
+            </div>
+          )}
+
+          <button type="submit" className="btn-confirm" disabled={loading}>
+            {loading ? 'Sending...' : 'Confirm Mail'}
           </button>
         </form>
       </div>
