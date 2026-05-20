@@ -4,6 +4,7 @@ import './home.css';
 import Header_Before_Login from '../../components/Header_Before_Login/Header_Before_Login.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
 import { getAuthToken } from '../../services/authStorage';
+import offerIcon from '../../assets/icons/offer-icon.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Home = () => {
                 <rect x="3" y="4" width="18" height="16" rx="2"/>
                 <path d="M16 2v4M8 2v4M3 10h18"/>
               </svg> */}
-              <img src="/src/assets/icons/offer-icon.png" alt="" />
+              <img src={offerIcon} alt="" />
               100% Free Forever -No Hidden Costs
             </div>
 

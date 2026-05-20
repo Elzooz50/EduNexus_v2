@@ -2,21 +2,25 @@ import React from 'react';
 import './about_us.css';
 import Header_Before_Login from '../../components/Header_Before_Login/Header_Before_Login.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
+import eslamTaha from '../../assets/images/eslam-taha.png';
+import aliHassan from '../../assets/images/ali-hassan.png';
+import ayaOmar from '../../assets/images/aya-omar.png';
+import aboutHeroImage from '../../assets/images/About-1st.png';
 
 const About_Us = () => {
   const team = [
     {
-      image: '/src/assets/images/eslam-taha.png',
+      image: eslamTaha,
       name: 'Dr.Eslam Taha',
       role: 'Artificial Intelligence'
     },
     {
-      image: '/src/assets/images/ali-hassan.png',
+      image: aliHassan,
       name: 'Dr.Ali Hassan',
       role: 'Compiler Theory'
     },
     {
-      image: '/src/assets/images/aya-omar.png',
+      image: ayaOmar,
       name: 'Dr.Aya Omar',
       role: 'Computer Vision'
     }
@@ -69,7 +73,7 @@ const About_Us = () => {
         <div className="about-hero">
           <div className="hero-left">
             <img 
-              src="/src/assets/images/About-1st.png" 
+              src={aboutHeroImage} 
               alt="Online learning"
               className="hero-image"
             />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './header_before_login.css';
+import logo from '../../assets/icons/Logo.svg';
 
 const Header_Before_Login = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Header_Before_Login = () => {
   return (
     <header className="header">
       <div className="header-left" onClick={handleLogoClick}>
-        <img src="/src/assets/icons/Logo.svg" alt="logo" />
+        <img src={logo} alt="logo" />
         <span className="brand-name">EduNexus</span>
 
       </div>

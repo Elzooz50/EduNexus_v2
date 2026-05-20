@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './new_password.css';
+import logo from '../../assets/icons/Logo.svg';
+import privacyIcon from '../../assets/icons/dashicons_privacy.png';
 
 const New_Password = () => {
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const New_Password = () => {
         </button>
         <span className="header-title">New Password</span>
         <div className='right-side'>
-          <img src="/src/assets/icons/Logo.svg" alt="" />
+          <img src={logo} alt="" />
           <div>
             <span className="brand-text">Edu</span>
             <span className="brand-highlight">Nexus</span>
@@ -45,7 +47,7 @@ const New_Password = () => {
 
       <div className="password-content">
         <div className="password-icon">
- <img src="/src/assets/icons/dashicons_privacy.png" alt="" />
+       <img src={privacyIcon} alt="" />
 
         </div>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import './how_it_works.css';
 import Header_Before_Login from '../../components/Header_Before_Login/Header_Before_Login.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
+import howItWorksBg from '../../assets/images/how-itworks-bg.png';
 
 const How_It_Works = () => {
   const steps = [
@@ -66,7 +67,7 @@ const How_It_Works = () => {
         
         <div className="hero-image">
           <img 
-            src="/src/assets/images/how-itworks-bg.png" 
+            src={howItWorksBg} 
             alt="Video conference meeting"
             className="hero-img"
           />

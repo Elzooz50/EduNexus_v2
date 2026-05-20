@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './notFound.css';
+import notFoundIllustration from '../../assets/images/404.png';
 
 const NotFound = () => {
   return (
@@ -26,7 +27,7 @@ const NotFound = () => {
         <div className="nf-content">
           <div className="nf-image-wrapper">
             <img
-              src="/src/assets/images/404.png"
+              src={notFoundIllustration}
               alt="404 illustration"
               className="nf-404-image"
             />

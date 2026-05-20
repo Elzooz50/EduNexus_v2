@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './verify_code.css';
+import logo from '../../assets/icons/Logo.svg';
+import verificationIllustration from '../../assets/images/Verify_code-illustration.png';
 const Verification_Code = () => {
   const navigate = useNavigate();
   const [code, setCode] = useState(['', '', '', '']);
@@ -62,7 +64,7 @@ const Verification_Code = () => {
         </button>
         <span className="header-title">Verification Code</span>
         <div className='right-side'>
-          <img src="/src/assets/icons/Logo.svg" alt="" />
+          <img src={logo} alt="" />
           <div>
             <span className="brand-text">Edu</span>
             <span className="brand-highlight">Nexus</span>
@@ -72,7 +74,7 @@ const Verification_Code = () => {
 
       <div className="verify-content">
         <div className="illustration">
-          <img src='/src/assets/images/Verify_code-illustration.png' alt="Verification illustration" />
+          <img src={verificationIllustration} alt="Verification illustration" />
         </div>
 
         <h1 className="verify-title">Verify email address</h1>

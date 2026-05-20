@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './forget_password.css';
+import logo from '../../assets/icons/Logo.svg';
+import forgetPasswordIllustration from '../../assets/images/forget-password-illustration.png';
 
 const Forget_Password = () => {
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const Forget_Password = () => {
         <span className="header-title">Forget Password</span>
         <div className='right-side'>
 
-            <img src="/src/assets/icons/Logo.svg" alt="" />
+          <img src={logo} alt="" />
 
           <div>
             <span className="brand-text">Edu</span>
@@ -39,7 +41,7 @@ const Forget_Password = () => {
 
       <div className="forget-content">
         <div className="illustration">
-          <img src='/src/assets/images/forget-password-illustration.png' alt="Forget Password illustration" />
+          <img src={forgetPasswordIllustration} alt="Forget Password illustration" />
         </div>
 
         <h1 className="forget-title">Forget Password</h1>

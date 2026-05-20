@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './logout.css';
+import logoutIllustration from '../../assets/images/Logout_Cycle.png';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Logout = () => {
 
       <div className="logout-content">
         <div className="illustration">
-            <img src='/src/assets/images/Logout_Cycle.png' alt="Logout illustration" />
+            <img src={logoutIllustration} alt="Logout illustration" />
         </div>
 
         <h1 className="logout-title">Are you sure you want to log out?</h1>
