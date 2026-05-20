@@ -1,60 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SuperAdminSideBar from '../../components/Super_Admin_SideBar/Super_Admin_SideBar';
+import apiClient from '../../services/apiClient';
 import './super_admin_dashboard.css';
+
+/** Animated counter hook */
+const useCountUp = (target, duration = 1000, startCounting = false) => {
+  const [count, setCount] = useState(0);
+  const frameRef = useRef(null);
+
+  useEffect(() => {
+    if (!startCounting || target === 0) {
+      setCount(target);
+      return;
+    }
+    let start = null;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) {
+        frameRef.current = requestAnimationFrame(step);
+      }
+    };
+    frameRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frameRef.current);
+  }, [target, duration, startCounting]);
+
+  return count;
+};
 
 const SuperAdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // All data comes from backend - defaults to 0
-  // eslint-disable-next-line no-unused-vars
   const [totalUsers, setTotalUsers] = useState(0);
-  // eslint-disable-next-line no-unused-vars
   const [totalInstitutions, setTotalInstitutions] = useState(0);
-  // eslint-disable-next-line no-unused-vars
   const [totalMeetings, setTotalMeetings] = useState(0);
-
-  // Admin name from backend
-  // eslint-disable-next-line no-unused-vars
-  const [adminName, setAdminName] = useState('');
-  // eslint-disable-next-line no-unused-vars
-  const [adminInitials, setAdminInitials] = useState('');
-
-  // Top institutions from backend
-  // eslint-disable-next-line no-unused-vars
-  const [institutions, setInstitutions] = useState([]);
+  const [animateIn, setAnimateIn] = useState(false);
 
   useEffect(() => {
-    // TODO: Fetch dashboard stats from backend
-    // fetch('/api/admin/dashboard-stats')
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setTotalUsers(data.totalUsers);
-    //     setTotalInstitutions(data.totalInstitutions);
-    //     setTotalMeetings(data.totalMeetings);
-    //   });
-
-    // TODO: Fetch admin profile from backend
-    // fetch('/api/admin/profile')
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setAdminName(data.name);
-    //     setAdminInitials(data.initials);
-    //   });
-
-    // TODO: Fetch top institutions from backend
-    // fetch('/api/admin/top-institutions')
-    //   .then(res => res.json())
-    //   .then(data => setInstitutions(data));
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const [usersRes, institutesRes, meetingsRes] = await Promise.all([
+          apiClient.get('/Dashboard/users-count'),
+          apiClient.get('/Dashboard/institutes-count'),
+          apiClient.get('/Dashboard/meetings-count'),
+        ]);
+        setTotalUsers(Number(usersRes.data) || 0);
+        setTotalInstitutions(Number(institutesRes.data) || 0);
+        setTotalMeetings(Number(meetingsRes.data) || 0);
+        setTimeout(() => setAnimateIn(true), 200);
+      // eslint-disable-next-line no-unused-vars
+      } catch (err) {
+        setError('Could not load dashboard data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
-  const getInitials = (name) => {
-    if (!name) return '';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
-  };
+  const usersCount = useCountUp(totalUsers, 1200, animateIn);
+  const instCount = useCountUp(totalInstitutions, 1200, animateIn);
+  const meetCount = useCountUp(totalMeetings, 1200, animateIn);
+
+  const chartData = [
+    { label: 'Users', value: totalUsers, color: '#6366f1', bg: '#eef2ff', icon: '👥' },
+    { label: 'Institutions', value: totalInstitutions, color: '#e67e22', bg: '#fef3c7', icon: '🏛️' },
+    { label: 'Meetings', value: totalMeetings, color: '#3b82f6', bg: '#dbeafe', icon: '📅' },
+  ];
+
+  const maxValue = Math.max(totalUsers, totalInstitutions, totalMeetings, 1);
+  const totalSum = totalUsers + totalInstitutions + totalMeetings || 1;
+
+  const adminName = 'Super Administrator';
+  const adminInitials = 'SA';
 
   return (
     <div className="sa-layout">
-      {/* Mobile toggle */}
       <button className="sa-mobile-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
         ☰
       </button>
@@ -64,7 +90,6 @@ const SuperAdminDashboard = () => {
       </div>
 
       <main className="sa-main-content">
-        {/* Header */}
         <header className="sa-header">
           <div className="sa-header-logo">
             <svg className="sa-edu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -75,95 +100,116 @@ const SuperAdminDashboard = () => {
           </div>
           <div className="sa-user-profile">
             <div className="sa-user-info">
-              <span className="sa-user-name">{adminName || 'Loading...'}</span>
+              <span className="sa-user-name">{adminName}</span>
               <span className="sa-user-role">Super Administrator</span>
             </div>
-            <div className="sa-user-avatar">{adminInitials || getInitials(adminName) || '--'}</div>
+            <div className="sa-user-avatar">{adminInitials}</div>
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <div className="sa-page-content">
-          {/* Stats Cards */}
-          <div className="sa-stats-grid">
-            <div className="sa-stat-card">
-              <div className="sa-stat-header">
-                <svg className="sa-stat-icon users" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </div>
-              <div className="sa-stat-label">Total Users</div>
-              <div className="sa-stat-value">{totalUsers.toLocaleString()}</div>
+          {loading && (
+            <div className="sa-loading">
+              <div className="sa-spinner"></div>
+              <p>Loading dashboard...</p>
             </div>
+          )}
 
-            <div className="sa-stat-card">
-              <div className="sa-stat-header">
-                <svg className="sa-stat-icon institutions" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-              </div>
-              <div className="sa-stat-label">Total Institutions</div>
-              <div className="sa-stat-value">{totalInstitutions.toLocaleString()}</div>
+          {error && (
+            <div className="sa-error">
+              <p>{error}</p>
+              <button onClick={() => window.location.reload()}>Retry</button>
             </div>
+          )}
 
-            <div className="sa-stat-card">
-              <div className="sa-stat-header">
-                <svg className="sa-stat-icon meetings" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+          {!loading && !error && (
+            <div className={`sa-dashboard ${animateIn ? 'sa-animate-in' : ''}`}>
+              {/* Stats Cards */}
+              <div className="sa-stats-grid">
+                <div className="sa-stat-card">
+                  <div className="sa-stat-icon-wrapper" style={{ backgroundColor: chartData[0].bg }}>
+                    <span className="sa-stat-emoji">{chartData[0].icon}</span>
+                  </div>
+                  <div className="sa-stat-label">Total Users</div>
+                  <div className="sa-stat-value">{usersCount.toLocaleString()}</div>
+                  <div className="sa-stat-sub">Registered accounts</div>
+                </div>
+                <div className="sa-stat-card">
+                  <div className="sa-stat-icon-wrapper" style={{ backgroundColor: chartData[1].bg }}>
+                    <span className="sa-stat-emoji">{chartData[1].icon}</span>
+                  </div>
+                  <div className="sa-stat-label">Total Institutions</div>
+                  <div className="sa-stat-value">{instCount.toLocaleString()}</div>
+                  <div className="sa-stat-sub">Active institutes</div>
+                </div>
+                <div className="sa-stat-card">
+                  <div className="sa-stat-icon-wrapper" style={{ backgroundColor: chartData[2].bg }}>
+                    <span className="sa-stat-emoji">{chartData[2].icon}</span>
+                  </div>
+                  <div className="sa-stat-label">Total Meetings</div>
+                  <div className="sa-stat-value">{meetCount.toLocaleString()}</div>
+                  <div className="sa-stat-sub">Scheduled sessions</div>
+                </div>
               </div>
-              <div className="sa-stat-label">Total Meetings</div>
-              <div className="sa-stat-value">{totalMeetings.toLocaleString()}</div>
-            </div>
-          </div>
 
-          {/* Top Institutions Table */}
-          <div className="sa-table-card">
-            <h3 className="sa-table-title">Top Institutions</h3>
-            <div className="sa-table-wrapper">
-              <table className="sa-institutions-table">
-                <thead>
-                  <tr>
-                    <th>Institutions Name</th>
-                    <th>Active Courses</th>
-                    <th>Total Meetings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {institutions.length === 0 ? (
-                    <tr>
-                      <td colSpan={3} className="sa-table-empty">No institutions data yet</td>
-                    </tr>
-                  ) : (
-                    institutions.map((inst) => (
-                      <tr key={inst.id}>
-                        <td>
-                          <div className="sa-institution-info">
-                            <div className="sa-institution-avatar" style={{ backgroundColor: inst.color }}>
-                              {inst.initials}
-                            </div>
-                            <div className="sa-institution-details">
-                              <span className="sa-institution-name">{inst.name}</span>
-                              <span className="sa-institution-domain">{inst.domain}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>{inst.activeCourses}</td>
-                        <td>{inst.totalMeetings}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+              {/* Charts Row */}
+              <div className="sa-charts-row">
+                {/* Bar Chart */}
+                <div className="sa-chart-card sa-bar-chart-card">
+                  <h2 className="sa-chart-title">Overview Comparison</h2>
+                  <div className="sa-bar-chart">
+                    {chartData.map((item, idx) => (
+                      <div className="sa-bar-item" key={item.label} style={{ animationDelay: `${0.2 + idx * 0.15}s` }}>
+                        <div className="sa-bar-label">
+                          <span>{item.label}</span>
+                          <span className="sa-bar-count">{item.value.toLocaleString()}</span>
+                        </div>
+                        <div className="sa-bar-track">
+                          <div
+                            className="sa-bar-fill"
+                            style={{
+                              width: animateIn ? `${(item.value / maxValue) * 100}%` : '0%',
+                              backgroundColor: item.color,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Donut Chart */}
+                <div className="sa-chart-card sa-donut-card">
+                  <h2 className="sa-chart-title">Distribution</h2>
+                  <div className="sa-donut-container">
+                    <div
+                      className="sa-donut"
+                      style={{
+                        background: `conic-gradient(
+                          #6366f1 0% ${(totalUsers / totalSum) * 100}%,
+                          #e67e22 ${(totalUsers / totalSum) * 100}% ${((totalUsers + totalInstitutions) / totalSum) * 100}%,
+                          #3b82f6 ${((totalUsers + totalInstitutions) / totalSum) * 100}% 100%
+                        )`,
+                      }}
+                    >
+                      <div className="sa-donut-hole">
+                        <span className="sa-donut-total">{totalSum.toLocaleString()}</span>
+                        <span className="sa-donut-label">Total</span>
+                      </div>
+                    </div>
+                    <div className="sa-donut-legend">
+                      {chartData.map((item) => (
+                        <div className="sa-legend-item" key={item.label}>
+                          <span className="sa-legend-dot" style={{ backgroundColor: item.color }}></span>
+                          <span>{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
     </div>

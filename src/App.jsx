@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { ROLES } from './services/authStorage.js';
-
+import Settings from './pages/Settings/Settings.jsx';
 // Public Pages
 import Home from './pages/Home/Home.jsx';
 import Get_Started from './pages/Get_Started/Get_Started.jsx';
@@ -20,7 +20,7 @@ import NotFound from './pages/NotFound/NotFound.jsx';
 
 // Super Admin Pages
 import SuperAdminDashboard from './pages/Super_Admin/Super_Admin_Dashboard.jsx';
-import Institutionas from './pages/Super_Admin/Institutionas.jsx';
+import Institutions from './pages/Super_Admin/Institutions.jsx';
 import UserAccess from './pages/Super_Admin/User_Access.jsx';
 
 // Institutional Admin Pages
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
   // ─────────── PUBLIC ROUTES ───────────
   { path: '/', element: <Home /> },
   { path: '/home', element: <Home /> },
-  { path: '/get-started', element: <Get_Started /> },
+  { path: '/get_started', element: <Get_Started /> },
   { path: '/features', element: <Features /> },
   { path: '/how-it-works', element: <How_It_Works /> },
   { path: '/about-us', element: <About_Us /> },
@@ -55,6 +55,14 @@ const router = createBrowserRouter([
   { path: '/forget-password', element: <Forget_Password /> },
   { path: '/verification-code', element: <Verification_Code /> },
   { path: '/new-password', element: <New_Password /> },
+  {
+  path: '/settings',
+  element: (
+    <ProtectedRoute allowedRoles={[1, 2, 3, 4]}>
+      <Settings />
+    </ProtectedRoute>
+  ),
+  },
 
   // ─────────── SUPER ADMIN (roleId: 1) ───────────
   {
@@ -66,10 +74,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/Super_Admin/Institutionas',
+    path: '/Super_Admin/Institutions',
     element: (
       <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
-        <Institutionas />
+        <Institutions />
       </ProtectedRoute>
     ),
   },

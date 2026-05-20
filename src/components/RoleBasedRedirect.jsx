@@ -15,7 +15,10 @@ const RoleBasedRedirect = () => {
   if (isLoading) return null;
 
   if (isAuthenticated && user) {
-    const redirectPath = ROLE_ROUTES[Number(user.roleId)] || '/';
+    const roleId = user?.roleId ? Number(user.roleId) : null;
+    if (!roleId) return null; // don't redirect if we don't know their role yet
+
+    const redirectPath = ROLE_ROUTES[roleId] || '/';
     return <Navigate to={redirectPath} replace />;
   }
 

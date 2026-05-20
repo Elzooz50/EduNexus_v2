@@ -1,6 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import './popupQuestion.css';
 
+/**
+ * @typedef {{id: string|number, text: string}} PopupOption
+ */
+
+/**
+ * @param {{
+ *   isOpen: boolean,
+ *   question?: string,
+ *   options?: PopupOption[],
+ *   onClose?: ()=>void,
+ *   onAnswer?: (option: PopupOption)=>void,
+ *   autoCloseTime?: number
+ * }} props
+ */
 export const PopupQuestion = ({
   isOpen,
   question,
@@ -11,6 +25,10 @@ export const PopupQuestion = ({
 }) => {
   const [timer, setTimer] = useState(autoCloseTime);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  const handleAutoClose = useCallback(() => {
+    onClose && onClose();
+  }, [onClose]);
 
   // Timer countdown
   useEffect(() => {
@@ -28,7 +46,7 @@ export const PopupQuestion = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isOpen]);
+  }, [isOpen, handleAutoClose]);
 
   // Reset timer when popup opens/closes
   useEffect(() => {
@@ -38,11 +56,8 @@ export const PopupQuestion = ({
     }
   }, [isOpen, autoCloseTime]);
 
-  const handleAutoClose = () => {
-    onClose();
-  };
 
-  const handleAnswerClick = (option) => {
+  const handleAnswerClick = (/** @type {PopupOption} */ option) => {
     setSelectedAnswer(option.id);
     if (onAnswer) {
       onAnswer(option);
