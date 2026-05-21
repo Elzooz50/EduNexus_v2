@@ -33,20 +33,14 @@ const Forget_Password = () => {
         }
       );
 
-      // Check if the response indicates success
-      if (response.data.message.includes('sent successfully')) {
-        setSuccess(response.data.message);
-        // Navigate to verification code page after a brief delay
-        setTimeout(() => {
-          navigate('/verification-code', { state: { email } });
-        }, 1500);
-      } else {
-        // Non-existent email or other response
-        setSuccess('If this email exists in our system, you will receive a password reset link.');
-        setTimeout(() => {
-          navigate('/verification-code', { state: { email } });
-        }, 1500);
+      const message = response.data?.message || '';
+
+      if (message.toLowerCase().includes('non-existent')) {
+        setError(message);
+        return;
       }
+
+      setSuccess(message || 'If the email exists, a reset link has been sent to your inbox.');
     } catch (err) {
       setError(
         err.response?.data?.message || 
@@ -121,6 +115,10 @@ const Forget_Password = () => {
               {success}
             </div>
           )}
+
+          <p style={{ marginTop: '12px', color: '#666', fontSize: '0.95rem', lineHeight: 1.5 }}>
+            If the email exists, we will send a reset link to your inbox. You will stay on this page until you open the email link.
+          </p>
 
           <button type="submit" className="btn-confirm" disabled={loading}>
             {loading ? 'Sending...' : 'Confirm Mail'}
