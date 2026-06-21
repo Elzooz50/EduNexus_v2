@@ -116,7 +116,7 @@ export const getRoleFromToken = (token) => {
 
 /**
  * Map role name to roleId
- * @param {string} roleName - Role name (e.g., 'Student', 'Instructor')
+ * @param {string} roleName - Role name (e.g., 'Student', 'Instructor', 'Admin')
  * @returns {number|null} Role ID or null
  */
 export const mapRoleNameToId = (roleName) => {
@@ -130,24 +130,28 @@ export const mapRoleNameToId = (roleName) => {
     .replace(/[_\\-]/g, ' ')
     .replace(/\s+/g, ' ');
 
-  // Heuristic checks to map various role name variants to our role IDs
-  if (normalized.includes('super') && normalized.includes('admin')) return ROLES.SUPER_ADMIN;
-  if (normalized.includes('inst') || normalized.includes('institution') || normalized.includes('institute')) return ROLES.INST_ADMIN;
-  if (normalized.includes('instructor')) return ROLES.INSTRUCTOR;
-  if (normalized.includes('student')) return ROLES.STUDENT;
-  if (normalized === 'admin') return ROLES.INST_ADMIN;
-
-  // Fallback explicit map for common exact names
-  const roleMap = {
+  // Direct exact matches first (these come from JWT)
+  const exactMap = {
+    'admin': ROLES.INST_ADMIN,           // Backend sends 'Admin' for institutional admins
+    'student': ROLES.STUDENT,            // Backend sends 'Student'
+    'instructor': ROLES.INSTRUCTOR,      // Backend sends 'Instructor'
+    'superadmin': ROLES.SUPER_ADMIN,     // If backend ever sends this
     'super admin': ROLES.SUPER_ADMIN,
     'institutional admin': ROLES.INST_ADMIN,
-    'superadmin': ROLES.SUPER_ADMIN,
     'instadmin': ROLES.INST_ADMIN,
-    'instructor': ROLES.INSTRUCTOR,
-    'student': ROLES.STUDENT,
     'institute': ROLES.INST_ADMIN,
     'institute admin': ROLES.INST_ADMIN,
   };
 
-  return roleMap[normalized] || null;
+  if (exactMap[normalized]) {
+    return exactMap[normalized];
+  }
+
+  // Heuristic checks for variations
+  if (normalized.includes('super') && normalized.includes('admin')) return ROLES.SUPER_ADMIN;
+  if (normalized.includes('inst') || normalized.includes('institution')) return ROLES.INST_ADMIN;
+  if (normalized.includes('instructor')) return ROLES.INSTRUCTOR;
+  if (normalized.includes('student')) return ROLES.STUDENT;
+
+  return null;
 };

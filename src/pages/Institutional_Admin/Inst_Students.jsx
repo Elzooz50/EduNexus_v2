@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import InstAdminSideBar from '../../components/Institutional_Admin_SideBar/Inst_Admin_SideBar';
+import apiClient from '../../services/apiClient';
 import './inst_students.css';
 
 const InstStudents = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [adminData, setAdminData] = useState({ fullName: '', email: '', instituteId: '', firstName: '' });
 
   // Import modal fields
   const [importFields, setImportFields] = useState({
@@ -19,24 +21,58 @@ const InstStudents = () => {
 
   const [importFile, setImportFile] = useState(null);
 
+  // Search
+  const [searchId, setSearchId] = useState('');
+  const [searchedStudent, setSearchedStudent] = useState(null);
+  const [searchError, setSearchError] = useState(null);
+  const [searching, setSearching] = useState(false);
+
+  // Assign modal
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignCourseId, setAssignCourseId] = useState('');
+  const [assignStudentId, setAssignStudentId] = useState(null);
+
+  // Unassign modal
+  const [showUnassignModal, setShowUnassignModal] = useState(false);
+  const [unassignCourseId, setUnassignCourseId] = useState('');
+  const [unassignStudentId, setUnassignStudentId] = useState(null);
+
   // Students data from backend
-  // eslint-disable-next-line no-unused-vars
-  const [students, setStudents] = useState([
-    // Sample static row
-    {
-      id: 1,
-      name: 'John Games',
-      email: 'johngames042@gmail.com',
-      enrolledCourses: 5,
-      avatar: '',
-    },
-  ]);
+  const [students, setStudents] = useState([]);
+  const [studentsLoading, setStudentsLoading] = useState(false);
 
   useEffect(() => {
-    // TODO: Fetch students from backend
-    // fetch('/api/inst-admin/students')
-    //   .then(res => res.json())
-    //   .then(data => setStudents(data));
+    // load admin user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setAdminData({
+          fullName: user.fullName || `${user.firstName || ''} ${user.secondName || ''} ${user.thirdName || ''} ${user.lastName || ''}`,
+          email: user.email || '',
+          instituteId: user.instituteId || '',
+          firstName: user.firstName || 'Admin'
+        });
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+
+    // fetch all students
+    const fetchStudents = async () => {
+      try {
+        setStudentsLoading(true);
+        const res = await apiClient.get('/Students');
+        const data = Array.isArray(res.data) ? res.data : res.data?.data || res.data?.students || [];
+        setStudents(data);
+      } catch (err) {
+        console.error('Error fetching students:', err);
+        setStudents([]);
+      } finally {
+        setStudentsLoading(false);
+      }
+    };
+    fetchStudents();
   }, []);
 
   const handleFieldToggle = (field) => {
@@ -62,6 +98,80 @@ const InstStudents = () => {
 
   const selectedCount = Object.values(importFields).filter(Boolean).length;
 
+  const handleSearch = async () => {
+    if (!searchId) return;
+    setSearching(true);
+    setSearchError(null);
+    setSearchedStudent(null);
+    try {
+      const res = await apiClient.get(`/Students/${encodeURIComponent(searchId)}`);
+      const student = res.data?.data || res.data;
+      if (!student) {
+        setSearchError('Student not found');
+      } else {
+        setSearchedStudent(student);
+      }
+    } catch (err) {
+      console.error('Search error', err);
+      setSearchError(err.response?.data?.message || 'Error searching student');
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const openAssignModal = (studentId) => {
+    setAssignStudentId(studentId);
+    setAssignCourseId('');
+    setShowAssignModal(true);
+  };
+
+  const handleAssignSubmit = async () => {
+    if (!assignCourseId || !assignStudentId) return alert('Course ID required');
+    try {
+      const res = await apiClient.post(`/Courses/${encodeURIComponent(assignCourseId)}/students/${encodeURIComponent(assignStudentId)}`);
+      if (res.data?.success) {
+        alert('Student assigned to course successfully');
+        // refresh students list
+        const refreshed = await apiClient.get('/Students');
+        const data = Array.isArray(refreshed.data) ? refreshed.data : refreshed.data?.data || refreshed.data?.students || [];
+        setStudents(data);
+      } else {
+        alert(res.data?.message || 'Failed to assign student to course');
+      }
+    } catch (err) {
+      console.error('Assign error', err);
+      alert(err.response?.data?.message || 'Error assigning student');
+    } finally {
+      setShowAssignModal(false);
+    }
+  };
+
+  const handleDelete = async (studentId) => {
+    setUnassignStudentId(studentId);
+    setUnassignCourseId('');
+    setShowUnassignModal(true);
+  };
+
+  const handleUnassignSubmit = async () => {
+    if (!unassignCourseId || !unassignStudentId) return alert('Course ID required');
+    try {
+      const res = await apiClient.delete(`/Courses/${encodeURIComponent(unassignCourseId)}/students/${encodeURIComponent(unassignStudentId)}`);
+      if (res.data?.success) {
+        alert('Student unassigned from course successfully');
+        const refreshed = await apiClient.get('/Students');
+        const data = Array.isArray(refreshed.data) ? refreshed.data : refreshed.data?.data || refreshed.data?.students || [];
+        setStudents(data);
+      } else {
+        alert(res.data?.message || 'Failed to unassign student from course');
+      }
+    } catch (err) {
+      console.error('Unassign error', err);
+      alert(err.response?.data?.message || 'Error unassigning student from course');
+    } finally {
+      setShowUnassignModal(false);
+    }
+  };
+
   return (
     <div className="ia-layout">
       <button className="ia-mobile-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>☰</button>
@@ -80,13 +190,11 @@ const InstStudents = () => {
             <span className="ia-edu-text">Edu<span className="ia-nexus-text">Nexus</span></span>
           </div>
           <div className="ia-user-profile">
-            <span className="ia-user-role-label">Institutional Admin</span>
-            <div className="ia-user-avatar">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+            <div className="ia-user-info">
+              <span className="ia-user-name">{adminData.fullName || 'Institutional Admin'}</span>
+              <span className="ia-user-email">{adminData.instituteId}</span>
             </div>
+            <div className="ia-user-avatar">{(adminData.fullName || '').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) || 'IA'}</div>
           </div>
         </header>
 
@@ -101,20 +209,47 @@ const InstStudents = () => {
               </svg>
               Import data
             </button>
-            <button className="ia-btn-export">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Export data
-            </button>
+            <div className="ia-search">
+              <input
+                type="text"
+                placeholder="Search student by ID (e.g. stu-alex-002)"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
+              <button className="ia-search-btn" onClick={handleSearch} disabled={searching}>{searching ? 'Searching...' : 'Search'}</button>
+            </div>
           </div>
 
           <div className="ia-page-header-section">
             <h1 className="ia-page-title">Student Management</h1>
             <p className="ia-page-subtitle">Manage all students within the system, track their academic levels, view their registered courses, and efficiently handle enrollment operations.</p>
           </div>
+
+          {/* Dynamic header info (admin name + institute id) */}
+          <div className="ia-header-inline">
+            <div className="ia-admin-name">{adminData.fullName || 'Institutional Admin'}</div>
+            <div className="ia-admin-id">{adminData.instituteId}</div>
+          </div>
+
+          {/* Search result: show enrolled courses for searched student */}
+          {searchedStudent && (
+            <div className="ia-search-result">
+              <h3>Student: {searchedStudent.fullName || searchedStudent.name || searchedStudent.id}</h3>
+              <p>Email: {searchedStudent.email}</p>
+              <h4>Enrolled Courses</h4>
+              {Array.isArray(searchedStudent.enrolledCourses) && searchedStudent.enrolledCourses.length > 0 ? (
+                <ul>
+                  {searchedStudent.enrolledCourses.map(c => (
+                    <li key={c.id}>{c.name} — {c.id}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No enrolled courses</p>
+              )}
+            </div>
+          )}
+          {searchError && <div className="ia-search-error">{searchError}</div>}
 
           {/* Students Table */}
           <div className="ia-table-card">
@@ -129,7 +264,11 @@ const InstStudents = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.length === 0 ? (
+                  {studentsLoading ? (
+                    <tr>
+                      <td colSpan={4} className="ia-table-empty">Loading students...</td>
+                    </tr>
+                  ) : students.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="ia-table-empty">No students found</td>
                     </tr>
@@ -140,7 +279,7 @@ const InstStudents = () => {
                           <div className="ia-person-info">
                             <div className="ia-person-avatar">
                               {student.avatar ? (
-                                <img src={student.avatar} alt={student.name} />
+                                <img src={student.avatar} alt={student.fullName || student.name} />
                               ) : (
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -148,26 +287,20 @@ const InstStudents = () => {
                                 </svg>
                               )}
                             </div>
-                            <span>{student.name}</span>
+                            <span>{student.fullName || student.name}</span>
                           </div>
                         </td>
                         <td>{student.email}</td>
-                        <td>{student.enrolledCourses} Courses</td>
+                        <td>{Array.isArray(student.enrolledCourses) ? student.enrolledCourses.length : student.enrolledCourses || 0} Courses</td>
                         <td>
                           <div className="ia-actions">
-                            <button className="ia-action-btn edit" title="Edit">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                              </svg>
-                            </button>
-                            <button className="ia-action-btn delete" title="Delete">
+                            <button className="ia-action-btn delete" title="Unassign from Course" onClick={() => handleDelete(student.id)}>
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <polyline points="3 6 5 6 21 6" />
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                               </svg>
                             </button>
-                            <button className="ia-action-btn assign">Assign to Course</button>
+                            <button className="ia-action-btn assign" onClick={() => openAssignModal(student.id)}>Assign to Course</button>
                           </div>
                         </td>
                       </tr>
@@ -245,6 +378,53 @@ const InstStudents = () => {
             <button className="ia-modal-submit" onClick={handleImportSubmit}>
               Import Data
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Modal */}
+      {showAssignModal && (
+        <div className="ia-modal-overlay" onClick={() => setShowAssignModal(false)}>
+          <div className="ia-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ia-modal-header">
+              <button className="ia-modal-close" onClick={() => setShowAssignModal(false)}>✕</button>
+              <h2>Assign Student to Course</h2>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label>Student ID</label>
+              <div style={{padding:8,background:'#f9fafb',borderRadius:6}}>{assignStudentId}</div>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label>Course ID</label>
+              <input type="text" value={assignCourseId} onChange={(e)=>setAssignCourseId(e.target.value)} placeholder="inst-cairo-0001-C1" />
+            </div>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button className="ia-modal-submit" onClick={handleAssignSubmit}>Assign</button>
+              <button className="ia-modal-close" onClick={() => setShowAssignModal(false)} style={{background:'#eee',color:'#333'}}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showUnassignModal && (
+        <div className="ia-modal-overlay" onClick={() => setShowUnassignModal(false)}>
+          <div className="ia-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ia-modal-header">
+              <button className="ia-modal-close" onClick={() => setShowUnassignModal(false)}>✕</button>
+              <h2>Unassign Student from Course</h2>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label>Student ID</label>
+              <div style={{padding:8,background:'#f9fafb',borderRadius:6}}>{unassignStudentId}</div>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label>Course ID</label>
+              <input type="text" value={unassignCourseId} onChange={(e)=>setUnassignCourseId(e.target.value)} placeholder="inst-cairo-0001-C1" />
+            </div>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button className="ia-modal-submit" onClick={handleUnassignSubmit}>Unassign</button>
+              <button className="ia-modal-close" onClick={() => setShowUnassignModal(false)} style={{background:'#eee',color:'#333'}}>Cancel</button>
+            </div>
           </div>
         </div>
       )}

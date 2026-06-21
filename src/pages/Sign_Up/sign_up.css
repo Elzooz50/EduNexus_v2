@@ -199,27 +199,27 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* Glass Sign‑up Card (scroll‑free) */
+/* Glass Sign‑up Card */
 /* ═══════════════════════════════════════════════════════════════ */
 .signup-card {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 480px;                /* slightly narrower for better fit */
-  max-height: 92vh;                /* never taller than the screen */
+  max-width: 480px;
+  max-height: 92vh;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 24px;
-  padding: 24px 28px;              /* reduced padding */
-  margin: 0 12px;                  /* small horizontal margin for safety */
+  padding: 24px 28px;
+  margin: 0 12px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08),
               0 0 0 1px rgba(30, 58, 95, 0.06) inset,
               0 0 30px rgba(210, 105, 30, 0.05);
   animation: cardAppear 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
   border: 1px solid rgba(210, 105, 30, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: visible;               /* NO internal scroll */
+  overflow: visible;
   display: flex;
   flex-direction: column;
 }
@@ -271,7 +271,7 @@ body {
 }
 
 .brand-title {
-  font-size: 26px;                 /* slightly smaller */
+  font-size: 26px;
   font-weight: 700;
   color: #1e3a5f;
 }
@@ -370,11 +370,11 @@ body {
   white-space: nowrap;
 }
 
-/* ───── Form (compact) ───── */
+/* ───── Form ───── */
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;                      /* tighter spacing */
+  gap: 10px;
 }
 
 .form-row {
@@ -405,7 +405,7 @@ body {
 
 .form-input {
   width: 100%;
-  padding: 8px 36px 8px 12px;    /* smaller padding */
+  padding: 8px 36px 8px 12px;
   border: 1.5px solid #e5e7eb;
   border-radius: 8px;
   font-size: 13px;
@@ -693,5 +693,53 @@ body {
   .signup-button {
     padding: 10px;
     font-size: 13px;
+  }
+}
+
+/* ───── Additional responsive adjustments for the form ───── */
+@media (max-width: 480px) {
+  .signup-card {
+    padding: 20px 16px;
+    max-width: 100%;
+    margin: 0 8px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .brand-title {
+    font-size: 22px;
+  }
+  
+  .radio-group {
+    flex-wrap: wrap;
+  }
+  
+  .radio-label {
+    flex: 1;
+    min-width: 80px;
+    justify-content: center;
+  }
+}
+
+/* ───── Add a bit more breathing room when form is shorter ───── */
+@media (min-height: 800px) {
+  .signup-card {
+    padding: 32px 36px;
+  }
+  
+  .signup-form {
+    gap: 14px;
+  }
+  
+  .form-group {
+    gap: 4px;
+  }
+  
+  .form-input {
+    padding: 10px 40px 10px 14px;
+    font-size: 14px;
   }
 }

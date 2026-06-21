@@ -66,8 +66,19 @@ export const loginAndFetchProfile = async (credentials) => {
   // 2. Set the token directly on the apiClient default headers
   apiClient.defaults.headers.common['Authorization'] = `Bearer ${loginResponse.token}`;
 
-  // 3. Save token to storage (for page reloads)
+  // 3. Enrich profile with roleId from JWT token
   const profile = enrichProfileFromToken(loginResponse.user || {}, loginResponse.token);
+
+  // 4. Ensure roleId is set (critical for redirects)
+  if (!profile.roleId) {
+    const roleNameFromToken = getRoleFromToken(loginResponse.token);
+    if (roleNameFromToken) {
+      profile.roleId = mapRoleNameToId(roleNameFromToken);
+      profile.role = { name: roleNameFromToken };
+    }
+  }
+
+  // 5. Save enriched profile to storage
   saveAuthData(loginResponse.token, profile);
 
   return {

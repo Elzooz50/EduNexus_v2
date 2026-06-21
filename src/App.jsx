@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { ROLES } from './services/authStorage.js';
 import Settings from './pages/Settings/Settings.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 // Public Pages
 import Home from './pages/Home/Home.jsx';
 import Get_Started from './pages/Get_Started/Get_Started.jsx';
@@ -172,7 +173,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
+        <ErrorBoundary>
       <RouterProvider router={router} />
+        </ErrorBoundary>
     </AuthProvider>
   );
 }

@@ -109,9 +109,14 @@ const InstAdminDashboard = () => {
       try {
         setStudentsLoading(true);
         const response = await apiClient.get('/Students');
-        setStudents(response.data || []);
+          // Ensure response.data is an array, handle various API response structures
+          const studentsData = Array.isArray(response.data)
+            ? response.data
+            : response.data?.students || response.data?.data || [];
+          setStudents(studentsData);
       } catch (err) {
         console.error('Error fetching students:', err);
+          setStudents([]); // Set empty array on error
       } finally {
         setStudentsLoading(false);
       }
@@ -127,10 +132,15 @@ const InstAdminDashboard = () => {
         const instituteId = adminData.instituteId;
         if (instituteId) {
           const response = await apiClient.get(`/Courses/institute/${instituteId}`);
-          setCourses(response.data || []);
+            // Ensure response.data is an array, handle various API response structures
+            const coursesData = Array.isArray(response.data)
+              ? response.data
+              : response.data?.courses || response.data?.data || [];
+            setCourses(coursesData);
         }
       } catch (err) {
         console.error('Error fetching courses:', err);
+          setCourses([]); // Set empty array on error
       } finally {
         setCoursesLoading(false);
       }
@@ -156,10 +166,10 @@ const InstAdminDashboard = () => {
   };
 
   // Limit students to latest 7 for display
-  const latestStudents = students.slice(0, 7);
+  const latestStudents = Array.isArray(students) ? students.slice(0, 7) : [];
   
   // Limit courses to latest 6 for display
-  const latestCourses = courses.slice(0, 6);
+  const latestCourses = Array.isArray(courses) ? courses.slice(0, 6) : [];
 
   return (
     <div className="ia-layout">
