@@ -41,6 +41,10 @@ import Student_Home from './pages/Student_Home/Student_Home.jsx';
 import ChangePassword from './pages/Change_Password/Change_Password.jsx';
 import Logout from './pages/Logout/Logout.jsx';
 
+// Meeting Pages
+import Lobby from './pages/Lobby/Lobby.jsx';
+import MeetingRoom from './pages/MeetingRoom/MeetingRoom.jsx';
+
 const router = createBrowserRouter([
   // ─────────── PUBLIC ROUTES ───────────
   { path: '/', element: <Home /> },
@@ -141,6 +145,24 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute allowedRoles={[ROLES.STUDENT]}>
         <Student_Home />
+      </ProtectedRoute>
+    ),
+  },
+
+  // ─────────── MEETING (all roles) ───────────
+  {
+    path: '/lobby',
+    element: (
+      <ProtectedRoute allowedRoles={[1, 2, 3, 4]}>
+        <Lobby />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/meeting/:meetingId',
+    element: (
+      <ProtectedRoute allowedRoles={[1, 2, 3, 4]}>
+        <MeetingRoom />
       </ProtectedRoute>
     ),
   },
