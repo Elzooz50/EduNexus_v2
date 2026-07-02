@@ -2,16 +2,19 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './logout.css';
+import logo from '../../assets/icons/Logo.svg';
 import logoutIllustration from '../../assets/images/Logout_Cycle.png';
 
 const Logout = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogout = async () => {
+    setLoading(true);
     // Call logout from auth context to update state properly
     logout();
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 800));
     navigate('/login');
   };
 
@@ -21,22 +24,31 @@ const Logout = () => {
 
   return (
     <div className="logout-container">
+      {/* Animated background decoration */}
+      <div className="bg-circle bg-circle-1"></div>
+      <div className="bg-circle bg-circle-2"></div>
+
       <div className="logout-header">
         <button className="back-btn" onClick={handleCancel}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
         </button>
         <span className="header-title">Logout</span>
         <div className='right-side'>
-            Edu<p className='logout-word'>Nexus</p>
+          <img src={logo} alt="EduNexus Logo" />
+          <span className="brand-name">
+            <span className="brand-edu">Edu</span>
+            <span className="brand-nexus">Nexus</span>
+          </span>
         </div>
       </div>
 
       <div className="logout-content">
-        <div className="illustration">
+        <div className="logout-card">
+          <div className="illustration">
             <img src={logoutIllustration} alt="Logout illustration" />
-        </div>
+          </div>
 
         <h1 className="logout-title">Are you sure you want to log out?</h1>
         <p className="logout-subtitle">
@@ -51,12 +63,19 @@ const Logout = () => {
             </svg>
             Cancel
           </button>
-          <button className="btn-logout" onClick={handleLogout}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-            </svg>
-            Logout
+          <button className={`btn-logout ${loading ? 'loading' : ''}`} onClick={handleLogout} disabled={loading}>
+            {loading ? (
+              <div className="btn-spinner"></div>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                </svg>
+                Logout
+              </>
+            )}
           </button>
+        </div>
         </div>
       </div>
     </div>

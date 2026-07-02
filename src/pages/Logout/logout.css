@@ -1,3 +1,5 @@
+/* logout.css - Premium Glassmorphic Redesign */
+
 * {
   margin: 0;
   padding: 0;
@@ -6,15 +8,57 @@
 
 .logout-container {
   min-height: 100vh;
-  background: #ffffff;
+  background: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
+/* ===== ANIMATED BACKGROUND BLUR CIRCLES ===== */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bg-circle-1 {
+  width: 300px;
+  height: 300px;
+  background: rgba(30, 58, 95, 0.15);
+  top: 15%;
+  left: 8%;
+  animation: floatSlow 15s infinite ease-in-out;
+}
+
+.bg-circle-2 {
+  width: 350px;
+  height: 350px;
+  background: rgba(230, 126, 34, 0.12);
+  bottom: 12%;
+  right: 8%;
+  animation: floatSlow 20s infinite ease-in-out reverse;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-40px) scale(1.05); }
+}
+
+/* ===== HEADER STYLING ===== */
 .logout-header {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid #e5e5e5;
+  justify-content: space-between;
+  padding: 0 40px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+  height: 72px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01);
 }
 
 .back-btn {
@@ -22,53 +66,128 @@
   border: none;
   cursor: pointer;
   color: #1E3A5F;
-  padding: 4px;
+  padding: 8px;
   margin-right: 12px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.back-btn:hover {
+  background: rgba(30, 58, 95, 0.06);
+  color: #E67E22;
+}
+
+.back-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.back-btn:hover svg {
+  transform: translateX(-3px);
 }
 
 .header-title {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #1E3A5F;
+  flex: 1;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.right-side img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.brand-name {
+  display: flex;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.brand-edu {
   color: #1E3A5F;
 }
 
+.brand-nexus {
+  color: #E67E22;
+}
+
+/* ===== MAIN CONTENT ===== */
 .logout-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 72px);
+  padding: 40px 24px;
+}
+
+/* Glassmorphic Central Card */
+.logout-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 40px rgba(30, 58, 95, 0.05);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 24px;
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.logout-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(30, 58, 95, 0.08);
+}
+
+/* Illustration with bobbing effect - Removed the explicit circle and just bob the image */
 .illustration {
-  width: 200px;
-  
-  margin-bottom: 32px;
+  width: 160px;
+  height: 140px;
+  margin-bottom: 24px;
+  animation: bobIllustration 4s infinite ease-in-out;
 }
 
-.illustration svg {
+.illustration img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
+}
+
+@keyframes bobIllustration {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .logout-title {
   font-size: 22px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 16px;
+  font-weight: 800;
+  color: #1E3A5F;
+  margin-bottom: 12px;
   line-height: 1.3;
 }
 
 .logout-subtitle {
   font-size: 14px;
-  color: #666666;
+  color: #64748B;
   line-height: 1.6;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
   max-width: 400px;
 }
 
@@ -85,54 +204,154 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 32px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  flex: 1;
   min-width: 140px;
   border: 1px solid transparent;
 }
 
 .btn-cancel {
   background: #ffffff;
-  border-color: #cccccc;
-  color: #333333;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .btn-cancel:hover {
-  background: #f5f5f5;
-  border-color: #999999;
+  background: #f1f5f9;
+  color: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
 }
 
 .btn-logout {
-  background: linear-gradient(135deg, #1E3A5F 0%, #D2691E 100%);
+  background: linear-gradient(90deg, #1E3A5F 0%, #D35400 100%);
   color: #ffffff;
-  border: none;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.15);
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-logout:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.btn-logout:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(211, 84, 0, 0.25);
+  background: linear-gradient(90deg, #1E3A5F 0%, #E67E22 100%);
+}
+
+.btn-logout:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-logout.loading {
+  background: linear-gradient(90deg, #16304f 0%, #1e3a5f 100%);
+  cursor: wait;
+}
+
+.btn-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-logout:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .btn-cancel svg,
 .btn-logout svg {
   flex-shrink: 0;
+  transition: transform 0.25s ease;
 }
-.right-side {
-  margin-left: auto;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1E3A5F;
-  display: flex;
-  justify-content: center;
+
+.btn-cancel:hover svg {
+  transform: scale(1.1);
 }
-.logout-logo {
-    width: 80px;
-  margin-right: 8px;
+
+.btn-logout:hover:not(:disabled) svg {
+  transform: translateX(3px);
 }
-.logout-word {
-    color: #D2691E;
+
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 768px) {
+  .logout-header {
+    padding: 0 20px;
+    height: 64px;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .right-side img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .logout-content {
+    padding: 24px 16px;
+    min-height: calc(100vh - 64px);
+  }
+
+  .logout-card {
+    padding: 36px 24px;
+    max-width: 100%;
+  }
+
+  .illustration {
+    width: 140px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logout-header {
+    padding: 0 12px;
+  }
+
+  .header-title {
+    display: none;
+  }
+
+  .logout-card {
+    padding: 28px 16px;
+  }
+
+  .logout-title {
+    font-size: 20px;
+  }
+
+  .logout-subtitle {
+    font-size: 13.5px;
+    margin-bottom: 28px;
+  }
+
+  .button-group {
+    flex-direction: column-reverse; /* Put primary action on top for mobile */
+    gap: 12px;
+  }
+
+  .btn-cancel,
+  .btn-logout {
+    padding: 12px 20px;
+    font-size: 14px;
+    width: 100%;
+  }
 }

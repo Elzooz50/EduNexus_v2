@@ -15,16 +15,13 @@
 }
 
 .ia-sidebar-wrapper {
-  width: 260px;
+  width: 280px;
   height: 100vh;
-  background: white;
-  border-right: 1px solid #e5e7eb;
-  overflow-y: auto;
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 40;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ia-sidebar-wrapper.open {
@@ -38,13 +35,16 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 30;
-  animation: fadeIn 0.3s ease;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .ia-sidebar-overlay.open {
   display: block;
+  opacity: 1;
 }
 
 .ia-mobile-toggle {
@@ -52,36 +52,40 @@
   position: fixed;
   top: 16px;
   left: 16px;
-  z-index: 50;
-  background: #1e3a5f;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
+  z-index: 110;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 12px;
   cursor: pointer;
   font-size: 20px;
-  color: white;
+  color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
 .ia-mobile-toggle:hover {
-  background: #e67e22;
-  transform: scale(1.02);
+  background: #f8fafc;
+  transform: translateY(-1px);
 }
 
 .ia-main-content {
-  margin-left: 260px;
+  margin-left: 280px;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: calc(100% - 260px);
+  width: calc(100% - 280px);
 }
 
 /* ────────────────────────────────────── */
 /* Header */
 /* ────────────────────────────────────── */
 .ia-header {
-  background: linear-gradient(135deg, #1e3a5f 0%, #1a3354 100%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
   padding: 16px 32px;
   display: flex;
   justify-content: space-between;
@@ -89,7 +93,7 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .ia-header-logo {
@@ -101,7 +105,7 @@
 .ia-edu-icon {
   width: 28px;
   height: 28px;
-  color: white;
+  color: #1e3a5f;
   animation: pulse 2s infinite;
 }
 
@@ -113,7 +117,7 @@
 .ia-edu-text {
   font-size: 20px;
   font-weight: 700;
-  color: white;
+  color: #1e293b;
 }
 
 .ia-nexus-text {
@@ -134,13 +138,13 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: #1e293b;
 }
 
 .ia-user-email {
   display: block;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
 }
 
 .ia-user-avatar {
@@ -335,11 +339,12 @@
 .ia-stat-card {
   background: white;
   border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 28px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.8);
   animation: cardSlideUp 0.5s ease backwards;
 }
 
@@ -359,24 +364,27 @@
 }
 
 .ia-stat-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: rgba(230, 126, 34, 0.3);
 }
 
-.ia-stat-card::before {
+.ia-stat-card::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #1e3a5f, #e67e22, #1e3a5f);
-  transform: scaleX(0);
-  transition: transform 0.5s ease;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at top right, rgba(230, 126, 34, 0.1), transparent 70%);
+  border-radius: 0 20px 0 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-.ia-stat-card:hover::before {
-  transform: scaleX(1);
+.ia-stat-card:hover::after {
+  opacity: 1;
 }
 
 .ia-stat-icon-wrap {
@@ -739,14 +747,6 @@
 @media (max-width: 768px) {
   .ia-mobile-toggle {
     display: block;
-  }
-
-  .ia-sidebar-wrapper {
-    transform: translateX(-100%);
-  }
-
-  .ia-sidebar-wrapper.open {
-    transform: translateX(0);
   }
 
   .ia-main-content {

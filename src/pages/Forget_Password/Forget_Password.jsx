@@ -122,8 +122,12 @@ const Forget_Password = () => {
               If the email exists, we will send a reset link to your inbox. You will stay on this page until you open the email link.
             </p>
 
-            <button type="submit" className="btn-confirm" disabled={loading}>
-              {loading ? 'Sending...' : 'Confirm Mail'}
+            <button type="submit" className={`btn-confirm ${loading ? 'loading' : ''}`} disabled={loading}>
+              {loading ? (
+                <div className="btn-spinner"></div>
+              ) : (
+                'Confirm Mail'
+              )}
             </button>
           </form>
         </div>

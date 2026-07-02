@@ -109,7 +109,8 @@
 
 .ia-search-btn:hover {
 	background: #16304f;
-	transform: translateY(-1px);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 10px rgba(30, 58, 95, 0.2);
 }
 
 .ia-search-btn:disabled {
@@ -125,6 +126,7 @@
 	background: linear-gradient(180deg, #f8fbff, #f4f7fb);
 	border: 1px solid #e4ebf5;
 	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+	animation: cardSlideUp 0.4s ease backwards;
 }
 
 .ia-search-result h3 {
@@ -265,10 +267,16 @@
 
 .ia-table-card {
 	background: #fff;
-	border: 1px solid #e6edf5;
+	border: 1px solid rgba(226, 232, 240, 0.8);
 	border-radius: 20px;
-	box-shadow: 0 20px 48px rgba(15, 23, 42, 0.06);
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 	overflow: hidden;
+	animation: cardSlideUp 0.5s ease backwards;
+}
+
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .ia-table {
@@ -291,10 +299,16 @@
 	padding: 16px 18px;
 	border-bottom: 1px solid #edf2f7;
 	color: #1f2937;
+	transition: background-color 0.2s;
+}
+
+.ia-table tbody tr {
+	transition: all 0.2s ease;
 }
 
 .ia-table tbody tr:hover {
-	background: #fbfdff;
+	background: linear-gradient(90deg, rgba(30, 58, 95, 0.03), rgba(230, 126, 34, 0.03));
+	transform: scale(1.01);
 }
 
 .ia-table-empty {

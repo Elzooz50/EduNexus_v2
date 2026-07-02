@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InstAdminSideBar from '../../components/Institutional_Admin_SideBar/Inst_Admin_SideBar';
 import apiClient from '../../services/apiClient';
 import './inst_students.css';
+import './inst_admin_dashboard.css';
 
 const InstStudents = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

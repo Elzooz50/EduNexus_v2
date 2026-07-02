@@ -100,6 +100,18 @@ export const AuthProvider = ({ children }) => {
   // Initialize: Check stored auth & refresh profile
   useEffect(() => {
     const initAuth = async () => {
+      // --- CROSS-DOMAIN SSO TRICK ---
+      // Check if we arrived with a token in the URL (e.g. from the main site linking to Vercel)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlToken = urlParams.get('token');
+      
+      if (urlToken) {
+        localStorage.setItem('accessToken', urlToken);
+        // Clean up the URL so the token isn't visible in the address bar
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      // ------------------------------
+
       if (checkAuth()) {
         const storedUser = getAuthUser();
         if (storedUser) {
@@ -118,6 +130,22 @@ export const AuthProvider = ({ children }) => {
             setUser(enrichedProfile);
           } catch {
             // If profile fetch fails, keep stored user
+          }
+        } else {
+          // We have a token but no stored user (e.g. from cross-domain SSO URL token)
+          // We MUST fetch the profile immediately
+          try {
+            const freshProfile = await fetchProfile();
+            const enrichedProfile = enrichUserWithRole(freshProfile);
+            const token = getAuthToken();
+            if (token) {
+              saveAuthData(token, enrichedProfile, true);
+            }
+            setUser(enrichedProfile);
+            setIsAuth(true);
+          } catch {
+            // Token might be invalid or expired
+            clearAuthData();
           }
         }
       }

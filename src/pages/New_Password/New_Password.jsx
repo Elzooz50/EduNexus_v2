@@ -85,6 +85,10 @@ const New_Password = () => {
 
   return (
     <div className="password-container">
+      {/* Animated background decoration */}
+      <div className="bg-circle bg-circle-1"></div>
+      <div className="bg-circle bg-circle-2"></div>
+
       <div className="password-header">
         <button className="back-btn" onClick={handleBack}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -102,15 +106,15 @@ const New_Password = () => {
       </div>
 
       <div className="password-content">
-        <div className="password-icon">
-       <img src={privacyIcon} alt="" />
+        <div className="password-card">
+          <div className="illustration">
+            <img src={privacyIcon} alt="Privacy icon" />
+          </div>
 
-        </div>
-
-        <h1 className="password-title">New Password</h1>
-        <p className="password-subtitle">
-          please enter your new password.
-        </p>
+          <h1 className="password-title">New Password</h1>
+          <p className="password-subtitle">
+            Please enter your new password to secure your account.
+          </p>
 
         {email && (
           <p style={{ marginBottom: '12px', color: '#666', fontSize: '0.95rem' }}>
@@ -183,10 +187,15 @@ const New_Password = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn-confirm" disabled={loading}>
-            {loading ? 'Resetting...' : 'Confirm Password'}
+          <button type="submit" className={`btn-confirm ${loading ? 'loading' : ''}`} disabled={loading}>
+            {loading ? (
+              <div className="btn-spinner"></div>
+            ) : (
+              'Confirm Password'
+            )}
           </button>
         </form>
+        </div>
       </div>
     </div>
   );

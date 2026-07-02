@@ -26,7 +26,7 @@
 }
 
 .ia-btn-add-course:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(230, 126, 34, 0.3);
 }
 
@@ -76,16 +76,16 @@
 
 /* Premium Neon Glass Cards */
 .ia-course-neon-card {
-  background: #ffffff;
-  border: 1px solid #e6edf5;
-  border-radius: 24px;
+  background: white;
+  border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.8);
   animation: cardFadeIn 0.5s ease-out both;
 }
 
@@ -109,12 +109,19 @@
   height: 4px;
   background: linear-gradient(90deg, #1e3a5f, #e67e22);
   opacity: 0.8;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.ia-course-neon-card:hover::before {
+  transform: scaleX(1);
 }
 
 .ia-course-neon-card:hover {
-  transform: translateY(-6px);
-  border-color: #cbd5e1;
-  box-shadow: 0 20px 40px rgba(30, 58, 95, 0.1);
+  transform: translateY(-8px);
+  border-color: rgba(230, 126, 34, 0.3);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Card Header Section */
@@ -126,17 +133,23 @@
 }
 
 .ia-course-icon-badge {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #eef2ff, #dbeafe);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 18px;
+  font-size: 20px;
   color: #1e3a5f;
   box-shadow: 0 4px 10px rgba(30, 58, 95, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ia-course-neon-card:hover .ia-course-icon-badge {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 8px 16px rgba(30, 58, 95, 0.15);
 }
 
 .ia-course-card-id-badge {
@@ -261,7 +274,7 @@
 }
 
 .ia-course-card-btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .ia-course-card-btn.view-details {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SuperAdminSideBar from '../../components/Super_Admin_SideBar/Super_Admin_SideBar';
 import './user_access.css';
+import './super_admin_dashboard.css';
 
 import { getApiErrorMessage } from '../../services/apiClient';
 
