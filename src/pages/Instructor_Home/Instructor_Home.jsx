@@ -343,7 +343,7 @@ const Instructor_Home = () => {
               className="ih-schedule-btn"
               onClick={() => {
                 const token = getAuthToken();
-                window.open(`http://localhost:5173/lobby${token ? `?token=${token}` : ''}`, '_blank');
+                window.open(`https://edunexus-meeting.vercel.app/lobby${token ? `?token=${token}` : ''}`, '_blank');
               }}
             >
               Schedule Meeting
@@ -390,14 +390,14 @@ const Instructor_Home = () => {
                 </div>
               );
             })}
-            
+
             {/* Persist the Schedule Meeting button even when meetings exist */}
             <div style={{ marginTop: '20px', textAlign: 'center' }}>
               <button
                 className="ih-schedule-btn"
                 onClick={() => {
                   const token = getAuthToken();
-                  window.open(`http://localhost:5173/lobby${token ? `?token=${token}` : ''}`, '_blank');
+                  window.open(`https://edunexus-meeting.vercel.app/lobby${token ? `?token=${token}` : ''}`, '_blank');
                 }}
               >
                 Schedule New Meeting
