@@ -17,7 +17,7 @@ const Header_Before_Login = () => {
     else if (path === '/login') setActiveTab('login');
     else if (path === '/sign-up') setActiveTab('sign-up');
     else setActiveTab('');
-    
+
     setMenuOpen(false);
   }, [location]);
 
@@ -38,47 +38,65 @@ const Header_Before_Login = () => {
   return (
     <header className="header">
       <div className="header-left" onClick={handleLogoClick}>
-        <img src={logo} alt="logo" />
-        <span className="brand-name">EduNexus</span>
-
+        <div className="logo-wrapper">
+          <img src={logo} alt="EduNexus Logo" />
+        </div>
+        <span className="brand-name">
+          <span className="brand-edu">Edu</span>
+          <span className="brand-nexus">Nexus</span>
+        </span>
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="header-nav-desktop">
-        <button 
+      <nav className="header-nav-desktop" aria-label="Main navigation">
+        <button
           className={`nav-link ${activeTab === 'features' ? 'active' : ''}`}
           onClick={() => handleTabClick('features', '/features')}
+          aria-current={activeTab === 'features' ? 'page' : undefined}
         >
           Features
         </button>
-        <button 
+        <button
           className={`nav-link ${activeTab === 'how-it-works' ? 'active' : ''}`}
           onClick={() => handleTabClick('how-it-works', '/how-it-works')}
+          aria-current={activeTab === 'how-it-works' ? 'page' : undefined}
         >
           How It Works
         </button>
-        <button 
+        <button
           className={`nav-link ${activeTab === 'about-us' ? 'active' : ''}`}
           onClick={() => handleTabClick('about-us', '/about-us')}
+          aria-current={activeTab === 'about-us' ? 'page' : undefined}
         >
           About Us
         </button>
-        <button 
+        <button
           className={`nav-link ${activeTab === 'login' ? 'active' : ''}`}
           onClick={() => handleTabClick('login', '/login')}
+          aria-current={activeTab === 'login' ? 'page' : undefined}
         >
           Login
         </button>
-        <button 
-          className={`nav-btn-signup ${activeTab === 'sign-up' ? 'active' : ''}`}
-          onClick={() => handleTabClick('sign-up', '/sign-up')}
-        >
-          Sign Up Free
-        </button>
       </nav>
 
-      {/* Hamburger menu button - visible on mobile */}
-      <button className="menu-toggle" onClick={toggleMenu}>
+      <div className="header-actions-desktop">
+        <button
+          className={`nav-btn-signup ${activeTab === 'sign-up' ? 'active' : ''}`}
+          onClick={() => handleTabClick('sign-up', '/sign-up')}
+          aria-current={activeTab === 'sign-up' ? 'page' : undefined}
+        >
+          Sign Up Free
+          <span className="btn-icon" aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      {/* Hamburger menu button */}
+      <button
+        className="menu-toggle"
+        onClick={toggleMenu}
+        aria-label="Toggle navigation menu"
+        aria-expanded={menuOpen}
+      >
         <span className={`hamburger ${menuOpen ? 'open' : ''}`}>
           <span></span>
           <span></span>
@@ -87,37 +105,42 @@ const Header_Before_Login = () => {
       </button>
 
       {/* Mobile Navigation */}
-      <nav className={`header-nav-mobile ${menuOpen ? 'open' : ''}`}>
+      <nav
+        className={`header-nav-mobile ${menuOpen ? 'open' : ''}`}
+        aria-label="Mobile navigation"
+        aria-hidden={!menuOpen}
+      >
         <div className="nav-buttons">
-          <button 
+          <button
             className={`nav-link ${activeTab === 'features' ? 'active' : ''}`}
             onClick={() => handleTabClick('features', '/features')}
           >
             Features
           </button>
-          <button 
+          <button
             className={`nav-link ${activeTab === 'how-it-works' ? 'active' : ''}`}
             onClick={() => handleTabClick('how-it-works', '/how-it-works')}
           >
             How It Works
           </button>
-          <button 
+          <button
             className={`nav-link ${activeTab === 'about-us' ? 'active' : ''}`}
             onClick={() => handleTabClick('about-us', '/about-us')}
           >
             About Us
           </button>
-          <button 
+          <button
             className={`nav-link ${activeTab === 'login' ? 'active' : ''}`}
             onClick={() => handleTabClick('login', '/login')}
           >
             Login
           </button>
-          <button 
+          <button
             className={`nav-btn-signup ${activeTab === 'sign-up' ? 'active' : ''}`}
             onClick={() => handleTabClick('sign-up', '/sign-up')}
           >
             Sign Up Free
+            <span className="btn-icon" aria-hidden="true">→</span>
           </button>
         </div>
       </nav>

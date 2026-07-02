@@ -10,10 +10,12 @@
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
+
 .camera-logo {
   width: 24px;
   height: 24px;
 }
+
 .footer-title {
   color: #ffffff;
   font-size: 32px;
@@ -42,30 +44,32 @@
 .footer-btn {
   background: linear-gradient(90deg, #1E3A5F 0%, #D35400 100%);
   color: #ffffff;
-  border: 1px solid rgb(255, 255, 255);
-  box-shadow: 0 0 4px 1px rgb(255, 255, 255);
-  padding: 10px 100px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  padding: 14px 28px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin-bottom: 15px;
-  transition: opacity 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .footer-btn:hover {
-    transition: 0.3s;
-    opacity: 0.9;
-    scale: 1.03;
-    box-shadow: 0 0 6px 2px rgb(163, 162, 161);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.4);
+  border-color: #ffffff;
 }
+
 .footer-btn:active {
-    transition: 0.3s;
-    opacity: 0.8;
-    transform: scale(0.9);
+  transform: scale(0.98);
+  opacity: 0.9;
 }
 
 .footer-btn svg {
@@ -80,40 +84,3 @@
   opacity: 0.9;
   margin-bottom: 5px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

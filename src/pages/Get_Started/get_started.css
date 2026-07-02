@@ -1,12 +1,14 @@
+/* get_started.css - Responsive Template-Matching Version */
+
 .page {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
+  background-color: #0f172a; /* Slate 900 fallback */
+  overflow: hidden;
 }
 
+/* Fullscreen background image */
 .bg-img {
   position: absolute;
   top: 0;
@@ -14,59 +16,174 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass to the button */
 }
 
-.page .start-btn {
-  display: flex;
+/* Get Started Button (Matches Screenshot: Blue to Orange Gradient) */
+.start-btn {
+  position: absolute;
+  bottom: 8%; /* Placed responsively in the lower section */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #1146e6, #e6a028);
-  color: rgb(0, 0, 0);
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 50px;
+  gap: 16px;
+  background: linear-gradient(135deg, #0a192f 0%, #17325c 40%, #e67e22 75%, #d35400 100%);
+  background-size: 200% auto;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 10px 36px 10px 14px; /* Less left padding since circle arrow is on the left */
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 60px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 1;
-  margin-top: 650px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: buttonGlowPulse 3s infinite ease-in-out;
+}
+
+@keyframes buttonGlowPulse {
+  0%, 100% {
+    box-shadow: 0 10px 25px rgba(10, 25, 47, 0.55), 0 0 15px rgba(230, 126, 34, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 14px 35px rgba(10, 25, 47, 0.7), 0 0 25px rgba(230, 126, 34, 0.4);
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* Glass reflection shine on hover */
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 30%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s ease-in-out;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.start-btn:hover::before {
+  opacity: 1;
+  left: 125%;
+  transition: left 0.75s ease-in-out;
 }
 
 .start-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  background: linear-gradient(135deg, #1a4af7, #fdad01);
+  transform: translateX(-50%) translateY(-3px);
+  background-position: right center;
+  filter: brightness(1.08);
 }
 
 .start-btn:active {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transform: translateX(-50%) translateY(0) scale(0.97);
+  box-shadow: 0 6px 15px rgba(10, 25, 47, 0.4);
+  transition: all 0.15s ease;
 }
 
-.start-btn:focus {
-  outline: 2px solid white;
-  outline-offset: 4px;
+.start-btn:focus-visible {
+  outline: 3px solid rgba(230, 126, 34, 0.6);
+  outline-offset: 3px;
 }
 
+/* Arrow Vector styling (Enhanced circle container) */
 .vector {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1);
 }
 
 .vector img {
-  width: 40px;
-  height: 40px;
-  transition: transform 0.3s ease;
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1); /* Forces it to render pure white */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.start-btn:hover .vector {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
 }
 
 .start-btn:hover .vector img {
-  transform: translateX(5px);
+  transform: translateX(4px) scale(1.05);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 640px) {
+  .start-btn {
+    padding: 8px 28px 8px 10px;
+    font-size: 1.05rem;
+    bottom: 9%;
+  }
+
+  .vector {
+    width: 32px;
+    height: 32px;
+  }
+
+  .vector img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .start-btn {
+    padding: 6px 24px 6px 8px;
+    font-size: 1rem;
+    bottom: 10%;
+  }
+
+  .vector {
+    width: 28px;
+    height: 28px;
+  }
+
+  .vector img {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  /* Fits mobile landscape layouts without overlapping */
+  .start-btn {
+    padding: 6px 24px 6px 8px;
+    font-size: 0.95rem;
+    bottom: 6%;
+  }
+
+  .vector {
+    width: 28px;
+    height: 28px;
+  }
+
+  .vector img {
+    width: 12px;
+    height: 12px;
+  }
 }

@@ -115,7 +115,7 @@ const InstCourses = () => {
       const payload = {
         id: newCourseId.trim(),
         name: newCourseName.trim(),
-        instituteName: adminData.instituteId // Backend maps correct institute from code/ID passed as name
+        instituteId: adminData.instituteId
       };
       
       const res = await apiClient.post('/Courses', payload);
